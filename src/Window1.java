@@ -11,9 +11,9 @@ public class Window1 extends JPanel implements ActionListener{
 	JPanel panel = new JPanel();
 	JTextArea text = new JTextArea();
 	public Window1(){
-		text.setPreferredSize(new Dimension(380,300));
+		text.setPreferredSize(new Dimension(580,500));
 		text.setEditable(false);
-		panel.setPreferredSize(new Dimension(400, 370));
+		panel.setPreferredSize(new Dimension(500, 570));
 		panel.add(text);
 		this.add(panel);
 		
