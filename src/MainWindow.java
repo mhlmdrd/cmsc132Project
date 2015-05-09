@@ -25,9 +25,11 @@ public class MainWindow extends JFrame {
 	static String [] r = new String[8]; //REGISTERS r[0]-r[7]
 	static String [] binary_code = new String[18]; //code for the instruction
 	static String [] instruction_code = new String[18]; //code for the register
+	static String flagCMP = new String();
 	static String mar0="0",mar1="0";			 //MAR[0]-MAR[1]
 	static int line_cnt =0;
 	public static void main(String[] args){
+		flagCMP = "0000 0000"; // updated if CMP instruction is called
 		int flag = 1;
 		JFileChooser choosy = new JFileChooser();
 		int returnValue = choosy.showOpenDialog(choosy);
@@ -632,6 +634,29 @@ public class MainWindow extends JFrame {
 							}
 						}//DESTINATION = MAR
 					}//end of if DIVIDE
+
+					//-----------------------CMP-------------------------//
+					
+					if(words[0].equals("CMP")){
+						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
+						index2 = FindRegister(words[2]);		//see if operand1 is a register/immediate 
+						if((index1!=-1) && (index2!=-1)){//register
+							if (index1 == index2) {
+								flagCMP = "0000 0000";
+							}
+							else if (index1 > index2) {
+								flagCMP = "0000 0001";
+							}
+							else{
+								flagCMP = "0000 0010";
+							}
+							System.out.println("flagCMP = "+ flagCMP);
+							
+						}
+						else{
+							System.out.println("ERROR at line: "+line_cnt);				//ERROR
+						}
+					}//END OF CMP
 					
 					//-------------------------BITWISE AND------------------------------------//
 					//first word
@@ -897,12 +922,8 @@ public class MainWindow extends JFrame {
 		
 		else{
 			return -1;
-		}
-		
-		
-		
+		}		
 		
 	}//end of FindRegister
-
 
 }
