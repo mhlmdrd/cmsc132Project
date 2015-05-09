@@ -162,7 +162,7 @@ public class MainWindow extends JFrame {
 						if((index1!=-1)){//register
 							result = Integer.parseInt(r[index1])+1;
 							r[index1] = Integer.toString(result);
-							System.out.println(r[index1]);				//ERROR
+							System.out.println("R"+index1+" = "+r[index1]);
 							
 						}
 						else{
@@ -177,8 +177,7 @@ public class MainWindow extends JFrame {
 						if((index1!=-1)){//register
 							result = Integer.parseInt(r[index1])-1;
 							r[index1] = Integer.toString(result);
-							System.out.println(r[index1]);				//ERROR
-							
+							System.out.println("R"+index1+" = "+r[index1]);							
 						}
 						else{
 							System.out.println("ERROR at line: "+line_cnt);				//ERROR
@@ -196,11 +195,11 @@ public class MainWindow extends JFrame {
 						
 						if((index1!=-1)&&(index2==-1)&&(index1!=8)&&(index2!=8)&&(index1!=9)&&(index2!=9)){		//register - immediate
 							r[index1] = words[2];
-							System.out.println("R"+index1+r[index1]);
+							System.out.println("R"+index1+" = "+r[index1]);							
 						}
 						else if((index1!=-1)&&(index2!=-1)&&(index1!=8)&&(index2!=8)&&(index1!=9)&&(index2!=9)){	//register-register
 							r[index1] = r[index2];
-							System.out.println("R"+index1+r[index1]);
+							System.out.println("R"+index1+" = "+r[index1]);
 						}
 						else{
 							System.out.println("ERROR at line: "+line_cnt);				//ERROR
@@ -219,27 +218,24 @@ public class MainWindow extends JFrame {
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
 								result = Integer.parseInt(r[index1])+ Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+r[index1]);
-								
+								System.out.println("R"+index1+" = "+r[index1]);								
 							}//END OF IF REGISTER
 							else if(index2!=-1){						//register-mar
 								if(index2==8){
 									result = Integer.parseInt(r[index1])+ Integer.parseInt(mar0);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+r[index1]);
-									
+									System.out.println("R"+index1+" = "+r[index1]);									
 								}
 								if(index2==9){
 									result = Integer.parseInt(r[index1])+ Integer.parseInt(mar1);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+r[index1]);
-									
+									System.out.println("R"+index1+" = "+r[index1]);
 								}
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1])+ Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+r[index1]);
+								System.out.println("R"+index1+" = "+r[index1]);
 								
 							}//END OF IF IMMEDIATE
 							else{
@@ -307,7 +303,7 @@ public class MainWindow extends JFrame {
 						}//DESTINATION = MAR
 					}//end of if ADD
 					
-					//-------------------------SUB------------------------------------//
+					//-------------------------SUBTRACT------------------------------------//
 					//first word
 					if(words[0].equals("SUB")){
 						
@@ -318,28 +314,27 @@ public class MainWindow extends JFrame {
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
 								result = Integer.parseInt(r[index1])- Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+r[index1]);
+								System.out.println("R"+index1+" = "+r[index1]);
 								
 							}//END OF IF REGISTER
 							else if(index2!=-1){						//register-mar
 								if(index2==8){
 									result = Integer.parseInt(r[index1])- Integer.parseInt(mar0);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+r[index1]);
+									System.out.println("R"+index1+" = "+r[index1]);
 									
 								}
 								if(index2==9){
 									result = Integer.parseInt(r[index1])- Integer.parseInt(mar1);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+r[index1]);
+									System.out.println("R"+index1+" = "+r[index1]);
 									
 								}
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1])- Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+r[index1]);
-								
+								System.out.println("R"+index1+" = "+r[index1]);
 							}//END OF IF IMMEDIATE
 							else{
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
@@ -404,8 +399,431 @@ public class MainWindow extends JFrame {
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
 							}
 						}//DESTINATION = MAR
-					}//end of if SUB
+					}//end of if SUBTRACT
+
+					//-------------------------MULTIPLY------------------------------------//
+					//first word
+					if(words[0].equals("MUL")){
+						
+						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
+						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
+						
+						if((index1!=-1)&&(index1!=8) &&(index1!=9)){//register - immediate/REG/MAR
+							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
+								result = Integer.parseInt(r[index1])* Integer.parseInt(r[index2]);
+								r[index1] = Integer.toString(result);
+								System.out.println("R"+index1+" = "+r[index1]);
+								
+							}//END OF IF REGISTER
+							else if(index2!=-1){						//register-mar
+								if(index2==8){
+									result = Integer.parseInt(r[index1])* Integer.parseInt(mar0);
+									r[index1] = Integer.toString(result);
+									System.out.println("R"+index1+" = "+r[index1]);
+									
+								}
+								if(index2==9){
+									result = Integer.parseInt(r[index1])* Integer.parseInt(mar1);
+									r[index1] = Integer.toString(result);
+									System.out.println("R"+index1+" = "+r[index1]);
+									
+								}
+							}//END OF IF MAR
+							else if(index2==-1){						//register - immediate
+								result = Integer.parseInt(r[index1])* Integer.parseInt(words[2]);
+								r[index1] = Integer.toString(result);
+								System.out.println("R"+index1+" = "+r[index1]);
+								
+							}//END OF IF IMMEDIATE
+							else{
+								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							}
+						}//DESTINATION = REGISTER
+						
+						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
+							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//mar-register
+								if(index1 == 8){
+									result = Integer.parseInt(mar0)* Integer.parseInt(r[index2]);
+									mar0 = Integer.toString(result);
+									System.out.println(mar0);
+								}
+								if(index2 == 8){
+									result = Integer.parseInt(mar1)* Integer.parseInt(r[index2]);
+									mar1 = Integer.toString(result);
+									System.out.println(mar1);
+								}
+							}//END OF IF MAR-REGISTER
+							else if(index2!=-1){						//mar-mar
+								if(index2==8){							//MAR-mar0
+									if(index1==8){						//mar0-mar0
+										result = Integer.parseInt(mar0)* Integer.parseInt(mar0);
+										mar0 = Integer.toString(result);
+										System.out.println(mar0);
+									}
+									else if(index1==9){					//mar1-mar0
+										result = Integer.parseInt(mar1)* Integer.parseInt(mar0);
+										mar1 = Integer.toString(result);
+										System.out.println("MAR"+mar1);
+									}
+									
+								}
+								if(index2==9){							//MAR-mar1
+									if(index1==8){						//mar0-mar1
+										result = Integer.parseInt(mar1)* Integer.parseInt(mar0);
+										mar0 = Integer.toString(result);
+										System.out.println(mar0);
+									}
+									else if(index1==9){					//mar1-mar1
+										result = Integer.parseInt(mar1)* Integer.parseInt(mar0);
+										mar1 = Integer.toString(result);
+										System.out.println("MAR"+mar1);
+									}
+									
+									
+								}
+							}//END OF IF MAR-MAR
+							else if(index2==-1){						//mar - immediate
+								if(index1==8){						//mar0-immediate
+									result = Integer.parseInt(mar0)* Integer.parseInt(words[2]);
+									mar0 = Integer.toString(result);
+									System.out.println(mar0);
+								}
+								else if(index1==9){					//mar1-immediate
+									result = Integer.parseInt(mar1)* Integer.parseInt(words[2]);
+									mar1 = Integer.toString(result);
+									System.out.println(mar1);
+								}
+							}//END OF IF MAR-IMMEDIATE
+							else{
+								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							}
+						}//DESTINATION = MAR
+					}//end of if MULTIPLY
+
+					//-------------------------DIVIDE------------------------------------//
+					//first word
+					if(words[0].equals("DIV")){
+						
+						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
+						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
+						
+						if((index1!=-1)&&(index1!=8) &&(index1!=9)){//register - immediate/REG/MAR
+							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
+								if (Integer.parseInt(r[index2]) != 0) {
+									result = Integer.parseInt(r[index1])/ Integer.parseInt(r[index2]);
+									r[index1] = Integer.toString(result);
+									System.out.println("R"+index1+" = "+r[index1]);
+								}
+								else{
+									System.out.println("Division by zero is undefined.");
+								}
+							}//END OF IF REGISTER
+							else if(index2!=-1){						//register-mar
+								if(index2==8){
+									if (Integer.parseInt(mar0) != 0) {
+										result = Integer.parseInt(r[index1]) / Integer.parseInt(mar0);
+										r[index1] = Integer.toString(result);
+										System.out.println("R"+index1+" = "+r[index1]);								
+									}
+									else{
+										System.out.println("Division by zero is undefined.");
+									}
+									
+								}
+								if(index2==9){
+									if (Integer.parseInt(mar1) != 0) {
+										result = Integer.parseInt(r[index1]) / Integer.parseInt(mar1);
+										r[index1] = Integer.toString(result);
+										System.out.println("R"+index1+" = "+r[index1]);
+									}
+									else{
+										System.out.println("Division by zero is undefined.");
+									}		
+									
+								}
+							}//END OF IF MAR
+							else if(index2==-1){						//register - immediate
+								if (Integer.parseInt(words[2]) != 0) {
+									result = Integer.parseInt(r[index1]) / Integer.parseInt(words[2]);
+									r[index1] = Integer.toString(result);
+									System.out.println("R"+index1+" = "+r[index1]);
+								}
+								else{
+									System.out.println("Division by zero is undefined.");
+								}								
+								
+							}//END OF IF IMMEDIATE
+							else{
+								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							}
+						}//DESTINATION = REGISTER
+						
+						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
+							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//mar-register
+								if (Integer.parseInt(r[index2]) != 0) {
+									if(index1 == 8){
+										result = Integer.parseInt(mar0) / Integer.parseInt(r[index2]);
+										mar0 = Integer.toString(result);
+										System.out.println(mar0);										
+										
+									}
+									if(index2 == 8){
+										result = Integer.parseInt(mar1) / Integer.parseInt(r[index2]);
+										mar1 = Integer.toString(result);
+										System.out.println(mar1);
+									}									
+								}
+								else{
+									System.out.println("Division by zero is undefined.");
+								}
+							}//END OF IF MAR-REGISTER
+							else if(index2!=-1){						//mar-mar
+								if(Integer.parseInt(mar0) != 0){
+									if(index2==8){							//MAR-mar0
+										if(index1==8){						//mar0-mar0
+											result = Integer.parseInt(mar0)/ Integer.parseInt(mar0);
+											mar0 = Integer.toString(result);
+											System.out.println(mar0);
+										}
+										else if(index1==9){					//mar1-mar0
+											result = Integer.parseInt(mar1)/ Integer.parseInt(mar0);
+											mar1 = Integer.toString(result);
+											System.out.println("MAR"+mar1);
+										}
+										
+									}
+									if(index2==9){							//MAR-mar1
+										if(index1==8){						//mar0-mar1
+											result = Integer.parseInt(mar1)/ Integer.parseInt(mar0);
+											mar0 = Integer.toString(result);
+											System.out.println(mar0);
+										}
+										else if(index1==9){					//mar1-mar1
+											result = Integer.parseInt(mar1)/ Integer.parseInt(mar0);
+											mar1 = Integer.toString(result);
+											System.out.println("MAR"+mar1);
+										}							
+										
+									}
+								}
+								else{
+									System.out.println("Division by zero is undefined.");
+								}
+							}//END OF IF MAR-MAR
+							else if(index2==-1){						//mar - immediate
+								if (Integer.parseInt(words[2]) != 0) {
+									if(index1==8){						//mar0-immediate
+										result = Integer.parseInt(mar0)/ Integer.parseInt(words[2]);
+										mar0 = Integer.toString(result);
+										System.out.println(mar0);
+									}
+									else if(index1==9){					//mar1-immediate
+										result = Integer.parseInt(mar1)/ Integer.parseInt(words[2]);
+										mar1 = Integer.toString(result);
+										System.out.println(mar1);
+									}									
+								}
+								else{
+									System.out.println("Division by zero is undefined.");
+								}
+							}//END OF IF MAR-IMMEDIATE
+							else{
+								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							}
+						}//DESTINATION = MAR
+					}//end of if DIVIDE
 					
+					//-------------------------BITWISE AND------------------------------------//
+					//first word
+					if(words[0].equals("AND")){
+						
+						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
+						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
+						
+						if((index1!=-1)&&(index1!=8) &&(index1!=9)){//register - immediate/REG/MAR
+							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
+								result = Integer.parseInt(r[index1]) & Integer.parseInt(r[index2]);
+								r[index1] = Integer.toString(result);
+								System.out.println("R"+index1+" = "+r[index1]);
+								
+							}//END OF IF REGISTER
+							else if(index2!=-1){						//register-mar
+								if(index2==8){
+									result = Integer.parseInt(r[index1]) & Integer.parseInt(mar0);
+									r[index1] = Integer.toString(result);
+									System.out.println("R"+index1+" = "+r[index1]);
+								}
+								if(index2==9){
+									result = Integer.parseInt(r[index1]) & Integer.parseInt(mar1);
+									r[index1] = Integer.toString(result);
+									System.out.println("R"+index1+" = "+r[index1]);
+								}
+							}//END OF IF MAR
+							else if(index2==-1){						//register - immediate
+								result = Integer.parseInt(r[index1]) & Integer.parseInt(words[2]);
+								r[index1] = Integer.toString(result);
+								System.out.println("R"+index1+" = "+r[index1]);
+								
+							}//END OF IF IMMEDIATE
+							else{
+								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							}
+						}//DESTINATION = REGISTER
+						
+						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
+							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//mar-register
+								if(index1 == 8){
+									result = Integer.parseInt(mar0) & Integer.parseInt(r[index2]);
+									mar0 = Integer.toString(result);
+									System.out.println(mar0);
+								}
+								if(index2 == 8){
+									result = Integer.parseInt(mar1) & Integer.parseInt(r[index2]);
+									mar1 = Integer.toString(result);
+									System.out.println(mar1);
+								}
+							}//END OF IF MAR-REGISTER
+							else if(index2!=-1){						//mar-mar
+								if(index2==8){							//MAR-mar0
+									if(index1==8){						//mar0-mar0
+										result = Integer.parseInt(mar0) & Integer.parseInt(mar0);
+										mar0 = Integer.toString(result);
+										System.out.println(mar0);
+									}
+									else if(index1==9){					//mar1-mar0
+										result = Integer.parseInt(mar1) & Integer.parseInt(mar0);
+										mar1 = Integer.toString(result);
+										System.out.println("MAR"+mar1);
+									}
+									
+								}
+								if(index2==9){							//MAR-mar1
+									if(index1==8){						//mar0-mar1
+										result = Integer.parseInt(mar1)& Integer.parseInt(mar0);
+										mar0 = Integer.toString(result);
+										System.out.println(mar0);
+									}
+									else if(index1==9){					//mar1-mar1
+										result = Integer.parseInt(mar1) & Integer.parseInt(mar0);
+										mar1 = Integer.toString(result);
+										System.out.println("MAR"+mar1);
+									}								
+									
+								}
+							}//END OF IF MAR-MAR
+							else if(index2==-1){						//mar - immediate
+								if(index1==8){						//mar0-immediate
+									result = Integer.parseInt(mar0) & Integer.parseInt(words[2]);
+									mar0 = Integer.toString(result);
+									System.out.println(mar0);
+								}
+								else if(index1==9){					//mar1-immediate
+									result = Integer.parseInt(mar1) & Integer.parseInt(words[2]);
+									mar1 = Integer.toString(result);
+									System.out.println(mar1);
+								}
+							}//END OF IF MAR-IMMEDIATE
+							else{
+								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							}
+						}//DESTINATION = MAR
+					}//end of if BITWISE AND
+
+					//-------------------------BITWISE OR------------------------------------//
+					//first word
+					if(words[0].equals("OR")){
+						
+						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
+						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
+						
+						if((index1!=-1)&&(index1!=8) &&(index1!=9)){//register - immediate/REG/MAR
+							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
+								result = Integer.parseInt(r[index1]) | Integer.parseInt(r[index2]);
+								r[index1] = Integer.toString(result);
+								System.out.println("R"+index1+" = "+r[index1]);
+								
+							}//END OF IF REGISTER
+							else if(index2!=-1){						//register-mar
+								if(index2==8){
+									result = Integer.parseInt(r[index1]) | Integer.parseInt(mar0);
+									r[index1] = Integer.toString(result);
+									System.out.println("R"+index1+" = "+r[index1]);
+								}
+								if(index2==9){
+									result = Integer.parseInt(r[index1]) | Integer.parseInt(mar1);
+									r[index1] = Integer.toString(result);
+									System.out.println("R"+index1+" = "+r[index1]);
+								}
+							}//END OF IF MAR
+							else if(index2==-1){						//register - immediate
+								result = Integer.parseInt(r[index1]) | Integer.parseInt(words[2]);
+								r[index1] = Integer.toString(result);
+								System.out.println("R"+index1+" = "+r[index1]);
+								
+							}//END OF IF IMMEDIATE
+							else{
+								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							}
+						}//DESTINATION = REGISTER
+						
+						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
+							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//mar-register
+								if(index1 == 8){
+									result = Integer.parseInt(mar0) | Integer.parseInt(r[index2]);
+									mar0 = Integer.toString(result);
+									System.out.println(mar0);
+								}
+								if(index2 == 8){
+									result = Integer.parseInt(mar1) | Integer.parseInt(r[index2]);
+									mar1 = Integer.toString(result);
+									System.out.println(mar1);
+								}
+							}//END OF IF MAR-REGISTER
+							else if(index2!=-1){						//mar-mar
+								if(index2==8){							//MAR-mar0
+									if(index1==8){						//mar0-mar0
+										result = Integer.parseInt(mar0) | Integer.parseInt(mar0);
+										mar0 = Integer.toString(result);
+										System.out.println(mar0);
+									}
+									else if(index1==9){					//mar1-mar0
+										result = Integer.parseInt(mar1) | Integer.parseInt(mar0);
+										mar1 = Integer.toString(result);
+										System.out.println("MAR"+mar1);
+									}
+									
+								}
+								if(index2==9){							//MAR-mar1
+									if(index1==8){						//mar0-mar1
+										result = Integer.parseInt(mar1)| Integer.parseInt(mar0);
+										mar0 = Integer.toString(result);
+										System.out.println(mar0);
+									}
+									else if(index1==9){					//mar1-mar1
+										result = Integer.parseInt(mar1) | Integer.parseInt(mar0);
+										mar1 = Integer.toString(result);
+										System.out.println("MAR"+mar1);
+									}								
+									
+								}
+							}//END OF IF MAR-MAR
+							else if(index2==-1){						//mar - immediate
+								if(index1==8){						//mar0-immediate
+									result = Integer.parseInt(mar0) | Integer.parseInt(words[2]);
+									mar0 = Integer.toString(result);
+									System.out.println(mar0);
+								}
+								else if(index1==9){					//mar1-immediate
+									result = Integer.parseInt(mar1) | Integer.parseInt(words[2]);
+									mar1 = Integer.toString(result);
+									System.out.println(mar1);
+								}
+							}//END OF IF MAR-IMMEDIATE
+							else{
+								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							}
+						}//DESTINATION = MAR
+					}//end of if BITWISE OR
 					
 					
 					line_cnt++; 							//LINE COUNTER
@@ -484,6 +902,7 @@ public class MainWindow extends JFrame {
 		
 		
 		
-	}//end of function
+	}//end of FindRegister
+
 
 }
