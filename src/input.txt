@@ -1,2 +1,3 @@
-SV r1 90
-SV r2 r1
+SV r1 42
+SV 1 15
+XOR r3 r1

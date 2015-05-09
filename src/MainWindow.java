@@ -12,7 +12,6 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-
 public class MainWindow extends JFrame {
 	static Window1 Window1 = new Window1();
 	static Window2 Window2 = new Window2();
@@ -22,14 +21,19 @@ public class MainWindow extends JFrame {
 	static Window6 Window6 = new Window6();
 	static Window7 Window7 = new Window7();
 	static File userFile;
-	static String [] r = new String[8]; //REGISTERS r[0]-r[7]
-	static String [] binary_code = new String[18]; //code for the instruction
+	static String [] r = new String[8]; 				//REGISTERS r[0]-r[7]
+	static String [] binary_code = new String[18]; 		//code for the instruction
 	static String [] instruction_code = new String[18]; //code for the register
 	static String flagCMP = new String();
-	static String mar0="0",mar1="0";			 //MAR[0]-MAR[1]
-	static int line_cnt =0;
+	static String PC = new String();					//Program Counter (PC)
+	static String IR = new String();					//Instruction Register (IR)
+	static String zeroFlag = new String();				//Zero Flag
+	static String signFlag = new String();				//Sign Flag
+	static String mar0="0",mar1="0";			 		//MAR[0]-MAR[1]
+	static int line_cnt =1;
 	public static void main(String[] args){
 		flagCMP = "0000 0000"; // updated if CMP instruction is called
+		signFlag = zeroFlag = "0000";
 		int flag = 1;
 		JFileChooser choosy = new JFileChooser();
 		int returnValue = choosy.showOpenDialog(choosy);
@@ -125,7 +129,7 @@ public class MainWindow extends JFrame {
 						if((index1!=-1)&&((index2==8)||(index2==9))){//register-mar
 							if(index2==8){
 								r[index1] = mar0;
-								Window1.text.setText( "    "+instruction_code[0]+" "+binary_code[index1]+" "+binary_code[8]+" "+line);
+								Window1.text.setText("    "+instruction_code[0]+" "+binary_code[index1]+" "+binary_code[8]+" "+line);
 							}
 							if(index2==9){
 								r[index1] = mar1;
@@ -133,6 +137,7 @@ public class MainWindow extends JFrame {
 						}
 						else{
 							System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							break;
 						}
 					}//END OF LOAD
 					
@@ -143,22 +148,20 @@ public class MainWindow extends JFrame {
 						if((index2!=-1)&&((index1==8)||(index1==9))){//mar-register
 							if(index1==8){
 								mar0 = r[index2];
-								System.out.println(mar0);				//ERROR
-								
+								System.out.println(mar0);				//ERROR								
 							}
 							if(index1==9){
 								mar1 = r[index2];
-								System.out.println(mar1);				//ERROR
-								
+								System.out.println(mar1);				//ERROR								
 							}
 						}
 						else{
 							System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							break;
 						}
 					}//END OF STORE
 					
-					//-----------------------INC-------------------------//
-					
+					//-----------------------INC-------------------------//					
 					if(words[0].equals("INC")){
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
 						if((index1!=-1)){//register
@@ -169,6 +172,7 @@ public class MainWindow extends JFrame {
 						}
 						else{
 							System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							break;
 						}
 					}//END OF INC
 					
@@ -183,6 +187,7 @@ public class MainWindow extends JFrame {
 						}
 						else{
 							System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							break;
 						}
 					}//END OF DEC
 					
@@ -205,6 +210,7 @@ public class MainWindow extends JFrame {
 						}
 						else{
 							System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							break;
 						}
 					}//end of if SAVE
 					
@@ -242,6 +248,7 @@ public class MainWindow extends JFrame {
 							}//END OF IF IMMEDIATE
 							else{
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
 							}
 						}//DESTINATION = REGISTER
 						
@@ -269,8 +276,7 @@ public class MainWindow extends JFrame {
 										result = Integer.parseInt(mar1)+ Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
 										System.out.println("MAR"+mar1);
-									}
-									
+									}									
 								}
 								if(index2==9){							//MAR-mar1
 									if(index1==8){						//mar0-mar1
@@ -283,8 +289,6 @@ public class MainWindow extends JFrame {
 										mar1 = Integer.toString(result);
 										System.out.println("MAR"+mar1);
 									}
-									
-									
 								}
 							}//END OF IF MAR-MAR
 							else if(index2==-1){						//mar - immediate
@@ -301,6 +305,7 @@ public class MainWindow extends JFrame {
 							}//END OF IF MAR-IMMEDIATE
 							else{
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
 							}
 						}//DESTINATION = MAR
 					}//end of if ADD
@@ -399,6 +404,7 @@ public class MainWindow extends JFrame {
 							}//END OF IF MAR-IMMEDIATE
 							else{
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
 							}
 						}//DESTINATION = MAR
 					}//end of if SUBTRACT
@@ -439,6 +445,7 @@ public class MainWindow extends JFrame {
 							}//END OF IF IMMEDIATE
 							else{
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
 							}
 						}//DESTINATION = REGISTER
 						
@@ -466,8 +473,7 @@ public class MainWindow extends JFrame {
 										result = Integer.parseInt(mar1)* Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
 										System.out.println("MAR"+mar1);
-									}
-									
+									}									
 								}
 								if(index2==9){							//MAR-mar1
 									if(index1==8){						//mar0-mar1
@@ -480,8 +486,6 @@ public class MainWindow extends JFrame {
 										mar1 = Integer.toString(result);
 										System.out.println("MAR"+mar1);
 									}
-									
-									
 								}
 							}//END OF IF MAR-MAR
 							else if(index2==-1){						//mar - immediate
@@ -498,6 +502,7 @@ public class MainWindow extends JFrame {
 							}//END OF IF MAR-IMMEDIATE
 							else{
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
 							}
 						}//DESTINATION = MAR
 					}//end of if MULTIPLY
@@ -530,7 +535,6 @@ public class MainWindow extends JFrame {
 									else{
 										System.out.println("Division by zero is undefined.");
 									}
-									
 								}
 								if(index2==9){
 									if (Integer.parseInt(mar1) != 0) {
@@ -557,6 +561,7 @@ public class MainWindow extends JFrame {
 							}//END OF IF IMMEDIATE
 							else{
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
 							}
 						}//DESTINATION = REGISTER
 						
@@ -566,8 +571,7 @@ public class MainWindow extends JFrame {
 									if(index1 == 8){
 										result = Integer.parseInt(mar0) / Integer.parseInt(r[index2]);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);										
-										
+										System.out.println(mar0);
 									}
 									if(index2 == 8){
 										result = Integer.parseInt(mar1) / Integer.parseInt(r[index2]);
@@ -591,8 +595,7 @@ public class MainWindow extends JFrame {
 											result = Integer.parseInt(mar1)/ Integer.parseInt(mar0);
 											mar1 = Integer.toString(result);
 											System.out.println("MAR"+mar1);
-										}
-										
+										}										
 									}
 									if(index2==9){							//MAR-mar1
 										if(index1==8){						//mar0-mar1
@@ -604,8 +607,7 @@ public class MainWindow extends JFrame {
 											result = Integer.parseInt(mar1)/ Integer.parseInt(mar0);
 											mar1 = Integer.toString(result);
 											System.out.println("MAR"+mar1);
-										}							
-										
+										}					
 									}
 								}
 								else{
@@ -631,6 +633,7 @@ public class MainWindow extends JFrame {
 							}//END OF IF MAR-IMMEDIATE
 							else{
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
 							}
 						}//DESTINATION = MAR
 					}//end of if DIVIDE
@@ -641,20 +644,14 @@ public class MainWindow extends JFrame {
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
 						index2 = FindRegister(words[2]);		//see if operand1 is a register/immediate 
 						if((index1!=-1) && (index2!=-1)){//register
-							if (index1 == index2) {
-								flagCMP = "0000 0000";
-							}
-							else if (index1 > index2) {
-								flagCMP = "0000 0001";
-							}
-							else{
-								flagCMP = "0000 0010";
-							}
-							System.out.println("flagCMP = "+ flagCMP);
-							
+							if (index1 == index2) flagCMP = "0000 0000";
+							else if (index1 > index2) flagCMP = "0000 0001";
+							else flagCMP = "0000 0010";
+							System.out.println("flagCMP = "+ flagCMP);							
 						}
 						else{
 							System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							break;
 						}
 					}//END OF CMP
 					
@@ -692,6 +689,7 @@ public class MainWindow extends JFrame {
 							}//END OF IF IMMEDIATE
 							else{
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
 							}
 						}//DESTINATION = REGISTER
 						
@@ -719,8 +717,7 @@ public class MainWindow extends JFrame {
 										result = Integer.parseInt(mar1) & Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
 										System.out.println("MAR"+mar1);
-									}
-									
+									}									
 								}
 								if(index2==9){							//MAR-mar1
 									if(index1==8){						//mar0-mar1
@@ -732,8 +729,7 @@ public class MainWindow extends JFrame {
 										result = Integer.parseInt(mar1) & Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
 										System.out.println("MAR"+mar1);
-									}								
-									
+									}																	
 								}
 							}//END OF IF MAR-MAR
 							else if(index2==-1){						//mar - immediate
@@ -750,6 +746,7 @@ public class MainWindow extends JFrame {
 							}//END OF IF MAR-IMMEDIATE
 							else{
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
 							}
 						}//DESTINATION = MAR
 					}//end of if BITWISE AND
@@ -788,6 +785,7 @@ public class MainWindow extends JFrame {
 							}//END OF IF IMMEDIATE
 							else{
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
 							}
 						}//DESTINATION = REGISTER
 						
@@ -846,10 +844,269 @@ public class MainWindow extends JFrame {
 							}//END OF IF MAR-IMMEDIATE
 							else{
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
 							}
 						}//DESTINATION = MAR
 					}//end of if BITWISE OR
 					
+					
+					//-----------------------------BITWISE NOT------------------------------------//
+					//first word
+					if(words[0].equals("NOT")){
+						index1 = FindRegister(words[1]);
+						index2 = FindRegister(words[2]);
+						
+						if((index1!=-1)&&(index1!=8) &&(index1!=9)){//register - immediate/REG/MAR
+							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
+								result = ~Integer.parseInt(r[index2]);
+								r[index1] = Integer.toString(result);
+								System.out.println("R"+index1+" = "+r[index1]);
+								
+							}//END OF IF REGISTER
+							else if(index2!=-1){						//register-mar
+								if(index2==8){
+									result = ~Integer.parseInt(mar0);
+									r[index1] = Integer.toString(result);
+									System.out.println("R"+index1+" = "+r[index1]);
+								}
+								if(index2==9){
+									result = ~Integer.parseInt(mar1);
+									r[index1] = Integer.toString(result);
+									System.out.println("R"+index1+" = "+r[index1]);
+								}
+							}//END OF IF MAR
+							else if(index2==-1){						//register - immediate
+								result = ~Integer.parseInt(words[2]);
+								r[index1] = Integer.toString(result);
+								System.out.println("R"+index1+" = "+r[index1]);
+								
+							}//END OF IF IMMEDIATE
+							else{
+								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
+							}
+						}//DESTINATION = REGISTER
+						
+						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
+							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//mar-register
+								if(index1 == 8){
+									result = ~Integer.parseInt(r[index2]);
+									mar0 = Integer.toString(result);
+									System.out.println(mar0);
+								}
+								if(index2 == 8){
+									result = ~Integer.parseInt(r[index2]);
+									mar1 = Integer.toString(result);
+									System.out.println(mar1);
+								}
+							}//END OF IF MAR-REGISTER
+							else if(index2!=-1){						//mar-mar
+								if(index2==8){							//MAR-mar0
+									if(index1==8){						//mar0-mar0
+										result = ~Integer.parseInt(mar0);
+										mar0 = Integer.toString(result);
+										System.out.println(mar0);
+									}
+									else if(index1==9){					//mar1-mar0
+										result = ~Integer.parseInt(mar0);
+										mar1 = Integer.toString(result);
+										System.out.println("MAR"+mar1);
+									}									
+								}
+								if(index2==9){							//MAR-mar1
+									if(index1==8){						//mar0-mar1
+										result = ~Integer.parseInt(mar0);
+										mar0 = Integer.toString(result);
+										System.out.println(mar0);
+									}
+									else if(index1==9){					//mar1-mar1
+										result = ~Integer.parseInt(mar0);
+										mar1 = Integer.toString(result);
+										System.out.println("MAR"+mar1);
+									}																	
+								}
+							}//END OF IF MAR-MAR
+							else if(index2==-1){						//mar - immediate
+								if(index1==8){						//mar0-immediate
+									result = ~Integer.parseInt(words[2]);
+									mar0 = Integer.toString(result);
+									System.out.println(mar0);
+								}
+								else if(index1==9){					//mar1-immediate
+									result = ~Integer.parseInt(words[2]);
+									mar1 = Integer.toString(result);
+									System.out.println(mar1);
+								}
+							}//END OF IF MAR-IMMEDIATE
+							else{
+								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							}
+						}//DESTINATION = MAR
+						
+						if(index1==-1){ System.out.println("ERROR at line: "+line_cnt); break;}	//ERROR
+						
+					}//end of NOT
+					
+					//------------------------------BITWISE XOR---------------------------------------//
+					//first word
+					if(words[0].equals("XOR")){
+						
+						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
+						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
+						
+						if((index1!=-1)&&(index1!=8) &&(index1!=9)){//register - immediate/REG/MAR
+							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
+								result = Integer.parseInt(r[index1]) ^ Integer.parseInt(r[index2]);
+								r[index1] = Integer.toString(result);
+								System.out.println("R"+index1+" = "+r[index1]);
+								
+							}//END OF IF REGISTER
+							else if(index2!=-1){						//register-mar
+								if(index2==8){
+									result = Integer.parseInt(r[index1]) ^ Integer.parseInt(mar0);
+									r[index1] = Integer.toString(result);
+									System.out.println("R"+index1+" = "+r[index1]);
+								}
+								if(index2==9){
+									result = Integer.parseInt(r[index1]) ^ Integer.parseInt(mar1);
+									r[index1] = Integer.toString(result);
+									System.out.println("R"+index1+" = "+r[index1]);
+								}
+							}//END OF IF MAR
+							else if(index2==-1){						//register - immediate
+								result = Integer.parseInt(r[index1]) ^ Integer.parseInt(words[2]);
+								r[index1] = Integer.toString(result);
+								System.out.println("R"+index1+" = "+r[index1]);
+								
+							}//END OF IF IMMEDIATE
+							else{
+								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
+							}
+						}//DESTINATION = REGISTER
+						
+						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
+							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//mar-register
+								if(index1 == 8){
+									result = Integer.parseInt(mar0) ^ Integer.parseInt(r[index2]);
+									mar0 = Integer.toString(result);
+									System.out.println(mar0);
+								}
+								if(index2 == 8){
+									result = Integer.parseInt(mar1) ^ Integer.parseInt(r[index2]);
+									mar1 = Integer.toString(result);
+									System.out.println(mar1);
+								}
+							}//END OF IF MAR-REGISTER
+							else if(index2!=-1){						//mar-mar
+								if(index2==8){							//MAR-mar0
+									if(index1==8){						//mar0-mar0
+										result = Integer.parseInt(mar0) ^ Integer.parseInt(mar0);
+										mar0 = Integer.toString(result);
+										System.out.println(mar0);
+									}
+									else if(index1==9){					//mar1-mar0
+										result = Integer.parseInt(mar1) ^ Integer.parseInt(mar0);
+										mar1 = Integer.toString(result);
+										System.out.println("MAR"+mar1);
+									}									
+								}
+								if(index2==9){							//MAR-mar1
+									if(index1==8){						//mar0-mar1
+										result = Integer.parseInt(mar1) ^ Integer.parseInt(mar0);
+										mar0 = Integer.toString(result);
+										System.out.println(mar0);
+									}
+									else if(index1==9){					//mar1-mar1
+										result = Integer.parseInt(mar1) ^ Integer.parseInt(mar0);
+										mar1 = Integer.toString(result);
+										System.out.println("MAR"+mar1);
+									}								
+									
+								}
+							}//END OF IF MAR-MAR
+							else if(index2==-1){					//mar - immediate
+								if(index1==8){						//mar0-immediate
+									result = Integer.parseInt(mar0) ^ Integer.parseInt(words[2]);
+									mar0 = Integer.toString(result);
+									System.out.println(mar0);
+								}
+								else if(index1==9){					//mar1-immediate
+									result = Integer.parseInt(mar1) ^ Integer.parseInt(words[2]);
+									mar1 = Integer.toString(result);
+									System.out.println(mar1);
+								}
+							}//END OF IF MAR-IMMEDIATE
+							else{
+								System.out.println("ERROR at line: "+line_cnt);				//ERROR
+								break;
+							}
+						}//DESTINATION = MAR
+						
+						if(index1==-1) { System.out.println("ERROR at line: "+line_cnt); break;}		//ERROR
+					}//end of if BITWISE XOR
+					
+					//-----------------------------------JE------------------------------------------//
+					
+					if(words[0].equals("JE")){						
+						index1 = FindRegister(words[1]);		//see if operand1 is a MAR
+						if((index1==8)||(index1==9)){//MAR
+							if(zeroFlag == "0000"){
+								if(index1==8){ PC = mar0; System.out.println("MAR0 = "+mar0);}
+								else if(index1==9){ PC = mar1; System.out.println("MAR1 = "+mar1);}
+							}						
+						}
+						else{
+							System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							break;
+						}
+					}//END OF JE
+					
+					//-----------------------------------JG------------------------------------------//
+					
+					if(words[0].equals("JG")){						
+						index1 = FindRegister(words[1]);		//see if operand1 is a MAR
+						if((index1==8)||(index1==9)){//MAR
+							if((zeroFlag == "0000")&&(signFlag=="0000")){
+								if(index1==8){ PC = mar0; System.out.println("MAR0 = "+mar0);}
+								else if(index1==9){ PC = mar1; System.out.println("MAR1 = "+mar1);}
+							}						
+						}
+						else{
+							System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							break;
+						}
+					}//END OF JG
+					
+					//-----------------------------------JL------------------------------------------//
+					
+					if(words[0].equals("JL")){						
+						index1 = FindRegister(words[1]);		//see if operand1 is a MAR
+						if((index1==8)||(index1==9)){//MAR
+							if(signFlag=="0000"){
+								if(index1==8){ PC = mar0; System.out.println("MAR0 = "+mar0);}
+								else if(index1==9){ PC = mar1; System.out.println("MAR1 = "+mar1);}
+							}
+						}
+						else{
+							System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							break;
+						}
+					}//END OF JL
+					
+					//-----------------------------------JMP------------------------------------------//
+					
+					if(words[0].equals("JMP")){						
+						index1 = FindRegister(words[1]);		//see if operand1 is a MAR
+						if((index1==8)||(index1==9)){//MAR
+							if(index1==8){ PC = mar0; System.out.println("MAR0 = "+mar0);}
+							else if(index1==9){ PC = mar1; System.out.println("MAR1 = "+mar1);}						
+						}
+						else{
+							System.out.println("ERROR at line: "+line_cnt);				//ERROR
+							break;
+						}
+					}//END OF JG
 					
 					line_cnt++; 							//LINE COUNTER
 				}//end of while loop
