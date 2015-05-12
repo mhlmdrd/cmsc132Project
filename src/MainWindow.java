@@ -251,7 +251,7 @@ public class MainWindow extends JFrame {
 							else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1])+ Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+" = "+r[index1]);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+line+"\n");
 								
 							}//END OF IF IMMEDIATE
 							else{
@@ -265,12 +265,12 @@ public class MainWindow extends JFrame {
 								if(index1 == 8){
 									result = Integer.parseInt(mar0)+ Integer.parseInt(r[index2]);
 									mar0 = Integer.toString(result);
-									System.out.println(mar0);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 								if(index2 == 8){
 									result = Integer.parseInt(mar1)+ Integer.parseInt(r[index2]);
 									mar1 = Integer.toString(result);
-									System.out.println(mar1);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 							}//END OF IF MAR-REGISTER
 							else if(index2!=-1){						//mar-mar
@@ -278,24 +278,24 @@ public class MainWindow extends JFrame {
 									if(index1==8){						//mar0-mar0
 										result = Integer.parseInt(mar0)+ Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar0
 										result = Integer.parseInt(mar1)+ Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}									
 								}
 								if(index2==9){							//MAR-mar1
 									if(index1==8){						//mar0-mar1
 										result = Integer.parseInt(mar1)+ Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar1
 										result = Integer.parseInt(mar1)+ Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 								}
 							}//END OF IF MAR-MAR
@@ -303,12 +303,12 @@ public class MainWindow extends JFrame {
 								if(index1==8){						//mar0-immediate
 									result = Integer.parseInt(mar0)+ Integer.parseInt(words[2]);
 									mar0 = Integer.toString(result);
-									System.out.println(mar0);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+line+"\n");
 								}
 								else if(index1==9){					//mar1-immediate
 									result = Integer.parseInt(mar1)+ Integer.parseInt(words[2]);
 									mar1 = Integer.toString(result);
-									System.out.println(mar1);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+line+"\n");
 								}
 							}//END OF IF MAR-IMMEDIATE
 							else{
@@ -329,27 +329,26 @@ public class MainWindow extends JFrame {
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
 								result = Integer.parseInt(r[index1])- Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+" = "+r[index1]);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								
 							}//END OF IF REGISTER
 							else if(index2!=-1){						//register-mar
 								if(index2==8){
 									result = Integer.parseInt(r[index1])- Integer.parseInt(mar0);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
-									
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 								if(index2==9){
 									result = Integer.parseInt(r[index1])- Integer.parseInt(mar1);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									
 								}
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1])- Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+" = "+r[index1]);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+line+"\n");
 							}//END OF IF IMMEDIATE
 							else{
 								System.out.println("ERROR at line: "+line_cnt);				//ERROR
@@ -361,12 +360,12 @@ public class MainWindow extends JFrame {
 								if(index1 == 8){
 									result = Integer.parseInt(mar0)- Integer.parseInt(r[index2]);
 									mar0 = Integer.toString(result);
-									System.out.println(mar0);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 								if(index2 == 8){
 									result = Integer.parseInt(mar1)- Integer.parseInt(r[index2]);
 									mar1 = Integer.toString(result);
-									System.out.println(mar1);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 							}//END OF IF MAR-REGISTER
 							else if(index2!=-1){						//mar-mar
@@ -374,12 +373,12 @@ public class MainWindow extends JFrame {
 									if(index1==8){						//mar0-mar0
 										result = Integer.parseInt(mar0)- Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar0
 										result = Integer.parseInt(mar1)+ Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									
 								}
@@ -387,12 +386,12 @@ public class MainWindow extends JFrame {
 									if(index1==8){						//mar0-mar1
 										result = Integer.parseInt(mar1)- Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar1
 										result = Integer.parseInt(mar1)- Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									
 									
@@ -402,12 +401,12 @@ public class MainWindow extends JFrame {
 								if(index1==8){						//mar0-immediate
 									result = Integer.parseInt(mar0)- Integer.parseInt(words[2]);
 									mar0 = Integer.toString(result);
-									System.out.println(mar0);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+line+"\n");
 								}
 								else if(index1==9){					//mar1-immediate
 									result = Integer.parseInt(mar1)- Integer.parseInt(words[2]);
 									mar1 = Integer.toString(result);
-									System.out.println(mar1);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+line+"\n");
 								}
 							}//END OF IF MAR-IMMEDIATE
 							else{
@@ -428,27 +427,27 @@ public class MainWindow extends JFrame {
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
 								result = Integer.parseInt(r[index1])* Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+" = "+r[index1]);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								
 							}//END OF IF REGISTER
 							else if(index2!=-1){						//register-mar
 								if(index2==8){
 									result = Integer.parseInt(r[index1])* Integer.parseInt(mar0);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									
 								}
 								if(index2==9){
 									result = Integer.parseInt(r[index1])* Integer.parseInt(mar1);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									
 								}
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1])* Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+" = "+r[index1]);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+line+"\n");
 								
 							}//END OF IF IMMEDIATE
 							else{
@@ -462,12 +461,12 @@ public class MainWindow extends JFrame {
 								if(index1 == 8){
 									result = Integer.parseInt(mar0)* Integer.parseInt(r[index2]);
 									mar0 = Integer.toString(result);
-									System.out.println(mar0);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 								if(index2 == 8){
 									result = Integer.parseInt(mar1)* Integer.parseInt(r[index2]);
 									mar1 = Integer.toString(result);
-									System.out.println(mar1);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 							}//END OF IF MAR-REGISTER
 							else if(index2!=-1){						//mar-mar
@@ -475,24 +474,24 @@ public class MainWindow extends JFrame {
 									if(index1==8){						//mar0-mar0
 										result = Integer.parseInt(mar0)* Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar0
 										result = Integer.parseInt(mar1)* Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}									
 								}
 								if(index2==9){							//MAR-mar1
 									if(index1==8){						//mar0-mar1
 										result = Integer.parseInt(mar1)* Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar1
 										result = Integer.parseInt(mar1)* Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 								}
 							}//END OF IF MAR-MAR
@@ -500,12 +499,12 @@ public class MainWindow extends JFrame {
 								if(index1==8){						//mar0-immediate
 									result = Integer.parseInt(mar0)* Integer.parseInt(words[2]);
 									mar0 = Integer.toString(result);
-									System.out.println(mar0);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+line+"\n");
 								}
 								else if(index1==9){					//mar1-immediate
 									result = Integer.parseInt(mar1)* Integer.parseInt(words[2]);
 									mar1 = Integer.toString(result);
-									System.out.println(mar1);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+line+"\n");
 								}
 							}//END OF IF MAR-IMMEDIATE
 							else{
@@ -527,7 +526,7 @@ public class MainWindow extends JFrame {
 								if (Integer.parseInt(r[index2]) != 0) {
 									result = Integer.parseInt(r[index1])/ Integer.parseInt(r[index2]);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 								else{
 									System.out.println("Division by zero is undefined.");
@@ -538,7 +537,7 @@ public class MainWindow extends JFrame {
 									if (Integer.parseInt(mar0) != 0) {
 										result = Integer.parseInt(r[index1]) / Integer.parseInt(mar0);
 										r[index1] = Integer.toString(result);
-										System.out.println("R"+index1+" = "+r[index1]);								
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else{
 										System.out.println("Division by zero is undefined.");
@@ -548,7 +547,7 @@ public class MainWindow extends JFrame {
 									if (Integer.parseInt(mar1) != 0) {
 										result = Integer.parseInt(r[index1]) / Integer.parseInt(mar1);
 										r[index1] = Integer.toString(result);
-										System.out.println("R"+index1+" = "+r[index1]);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else{
 										System.out.println("Division by zero is undefined.");
@@ -560,7 +559,7 @@ public class MainWindow extends JFrame {
 								if (Integer.parseInt(words[2]) != 0) {
 									result = Integer.parseInt(r[index1]) / Integer.parseInt(words[2]);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+line+"\n");
 								}
 								else{
 									System.out.println("Division by zero is undefined.");
@@ -579,12 +578,12 @@ public class MainWindow extends JFrame {
 									if(index1 == 8){
 										result = Integer.parseInt(mar0) / Integer.parseInt(r[index2]);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									if(index2 == 8){
 										result = Integer.parseInt(mar1) / Integer.parseInt(r[index2]);
 										mar1 = Integer.toString(result);
-										System.out.println(mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}									
 								}
 								else{
@@ -597,24 +596,24 @@ public class MainWindow extends JFrame {
 										if(index1==8){						//mar0-mar0
 											result = Integer.parseInt(mar0)/ Integer.parseInt(mar0);
 											mar0 = Integer.toString(result);
-											System.out.println(mar0);
+											Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 										}
 										else if(index1==9){					//mar1-mar0
 											result = Integer.parseInt(mar1)/ Integer.parseInt(mar0);
 											mar1 = Integer.toString(result);
-											System.out.println("MAR"+mar1);
+											Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 										}										
 									}
 									if(index2==9){							//MAR-mar1
 										if(index1==8){						//mar0-mar1
 											result = Integer.parseInt(mar1)/ Integer.parseInt(mar0);
 											mar0 = Integer.toString(result);
-											System.out.println(mar0);
+											Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 										}
 										else if(index1==9){					//mar1-mar1
 											result = Integer.parseInt(mar1)/ Integer.parseInt(mar0);
 											mar1 = Integer.toString(result);
-											System.out.println("MAR"+mar1);
+											Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 										}					
 									}
 								}
@@ -627,12 +626,12 @@ public class MainWindow extends JFrame {
 									if(index1==8){						//mar0-immediate
 										result = Integer.parseInt(mar0)/ Integer.parseInt(words[2]);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-immediate
 										result = Integer.parseInt(mar1)/ Integer.parseInt(words[2]);
 										mar1 = Integer.toString(result);
-										System.out.println(mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+line+"\n");
 									}									
 								}
 								else{
@@ -656,6 +655,7 @@ public class MainWindow extends JFrame {
 							else if (index1 > index2) flagCMP = "0000 0001";
 							else flagCMP = "0000 0010";
 							System.out.println("flagCMP = "+ flagCMP);							
+							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[9]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 						}
 						else{
 							System.out.println("ERROR at line: "+line_cnt);				//ERROR
@@ -674,25 +674,25 @@ public class MainWindow extends JFrame {
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
 								result = Integer.parseInt(r[index1]) & Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+" = "+r[index1]);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								
 							}//END OF IF REGISTER
 							else if(index2!=-1){						//register-mar
 								if(index2==8){
 									result = Integer.parseInt(r[index1]) & Integer.parseInt(mar0);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 								if(index2==9){
 									result = Integer.parseInt(r[index1]) & Integer.parseInt(mar1);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1]) & Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+" = "+r[index1]);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+line+"\n");
 								
 							}//END OF IF IMMEDIATE
 							else{
@@ -706,12 +706,12 @@ public class MainWindow extends JFrame {
 								if(index1 == 8){
 									result = Integer.parseInt(mar0) & Integer.parseInt(r[index2]);
 									mar0 = Integer.toString(result);
-									System.out.println(mar0);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 								if(index2 == 8){
 									result = Integer.parseInt(mar1) & Integer.parseInt(r[index2]);
 									mar1 = Integer.toString(result);
-									System.out.println(mar1);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 							}//END OF IF MAR-REGISTER
 							else if(index2!=-1){						//mar-mar
@@ -719,24 +719,24 @@ public class MainWindow extends JFrame {
 									if(index1==8){						//mar0-mar0
 										result = Integer.parseInt(mar0) & Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar0
 										result = Integer.parseInt(mar1) & Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}									
 								}
 								if(index2==9){							//MAR-mar1
 									if(index1==8){						//mar0-mar1
 										result = Integer.parseInt(mar1)& Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar1
 										result = Integer.parseInt(mar1) & Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}																	
 								}
 							}//END OF IF MAR-MAR
@@ -744,11 +744,13 @@ public class MainWindow extends JFrame {
 								if(index1==8){						//mar0-immediate
 									result = Integer.parseInt(mar0) & Integer.parseInt(words[2]);
 									mar0 = Integer.toString(result);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+line+"\n");
 									System.out.println(mar0);
 								}
 								else if(index1==9){					//mar1-immediate
 									result = Integer.parseInt(mar1) & Integer.parseInt(words[2]);
 									mar1 = Integer.toString(result);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+line+"\n");
 									System.out.println(mar1);
 								}
 							}//END OF IF MAR-IMMEDIATE
@@ -770,25 +772,25 @@ public class MainWindow extends JFrame {
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
 								result = Integer.parseInt(r[index1]) | Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+" = "+r[index1]);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								
 							}//END OF IF REGISTER
 							else if(index2!=-1){						//register-mar
 								if(index2==8){
 									result = Integer.parseInt(r[index1]) | Integer.parseInt(mar0);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 								if(index2==9){
 									result = Integer.parseInt(r[index1]) | Integer.parseInt(mar1);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1]) | Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+" = "+r[index1]);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+line+"\n");
 								
 							}//END OF IF IMMEDIATE
 							else{
@@ -802,12 +804,12 @@ public class MainWindow extends JFrame {
 								if(index1 == 8){
 									result = Integer.parseInt(mar0) | Integer.parseInt(r[index2]);
 									mar0 = Integer.toString(result);
-									System.out.println(mar0);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 								if(index2 == 8){
 									result = Integer.parseInt(mar1) | Integer.parseInt(r[index2]);
 									mar1 = Integer.toString(result);
-									System.out.println(mar1);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 							}//END OF IF MAR-REGISTER
 							else if(index2!=-1){						//mar-mar
@@ -815,12 +817,12 @@ public class MainWindow extends JFrame {
 									if(index1==8){						//mar0-mar0
 										result = Integer.parseInt(mar0) | Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar0
 										result = Integer.parseInt(mar1) | Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									
 								}
@@ -828,12 +830,12 @@ public class MainWindow extends JFrame {
 									if(index1==8){						//mar0-mar1
 										result = Integer.parseInt(mar1)| Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar1
 										result = Integer.parseInt(mar1) | Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}								
 									
 								}
@@ -842,12 +844,12 @@ public class MainWindow extends JFrame {
 								if(index1==8){						//mar0-immediate
 									result = Integer.parseInt(mar0) | Integer.parseInt(words[2]);
 									mar0 = Integer.toString(result);
-									System.out.println(mar0);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+line+"\n");
 								}
 								else if(index1==9){					//mar1-immediate
 									result = Integer.parseInt(mar1) | Integer.parseInt(words[2]);
 									mar1 = Integer.toString(result);
-									System.out.println(mar1);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+line+"\n");
 								}
 							}//END OF IF MAR-IMMEDIATE
 							else{
@@ -868,25 +870,25 @@ public class MainWindow extends JFrame {
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
 								result = ~Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+" = "+r[index1]);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								
 							}//END OF IF REGISTER
 							else if(index2!=-1){						//register-mar
 								if(index2==8){
 									result = ~Integer.parseInt(mar0);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 								if(index2==9){
 									result = ~Integer.parseInt(mar1);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								result = ~Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+" = "+r[index1]);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+line+"\n");
 								
 							}//END OF IF IMMEDIATE
 							else{
@@ -900,12 +902,12 @@ public class MainWindow extends JFrame {
 								if(index1 == 8){
 									result = ~Integer.parseInt(r[index2]);
 									mar0 = Integer.toString(result);
-									System.out.println(mar0);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 								if(index2 == 8){
 									result = ~Integer.parseInt(r[index2]);
 									mar1 = Integer.toString(result);
-									System.out.println(mar1);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 							}//END OF IF MAR-REGISTER
 							else if(index2!=-1){						//mar-mar
@@ -913,24 +915,24 @@ public class MainWindow extends JFrame {
 									if(index1==8){						//mar0-mar0
 										result = ~Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar0
 										result = ~Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}									
 								}
 								if(index2==9){							//MAR-mar1
 									if(index1==8){						//mar0-mar1
 										result = ~Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar1
 										result = ~Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}																	
 								}
 							}//END OF IF MAR-MAR
@@ -938,12 +940,12 @@ public class MainWindow extends JFrame {
 								if(index1==8){						//mar0-immediate
 									result = ~Integer.parseInt(words[2]);
 									mar0 = Integer.toString(result);
-									System.out.println(mar0);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+line+"\n");
 								}
 								else if(index1==9){					//mar1-immediate
 									result = ~Integer.parseInt(words[2]);
 									mar1 = Integer.toString(result);
-									System.out.println(mar1);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+line+"\n");
 								}
 							}//END OF IF MAR-IMMEDIATE
 							else{
@@ -966,25 +968,25 @@ public class MainWindow extends JFrame {
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
 								result = Integer.parseInt(r[index1]) ^ Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+" = "+r[index1]);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								
 							}//END OF IF REGISTER
 							else if(index2!=-1){						//register-mar
 								if(index2==8){
 									result = Integer.parseInt(r[index1]) ^ Integer.parseInt(mar0);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 								if(index2==9){
 									result = Integer.parseInt(r[index1]) ^ Integer.parseInt(mar1);
 									r[index1] = Integer.toString(result);
-									System.out.println("R"+index1+" = "+r[index1]);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1]) ^ Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
-								System.out.println("R"+index1+" = "+r[index1]);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+line+"\n");
 								
 							}//END OF IF IMMEDIATE
 							else{
@@ -998,12 +1000,12 @@ public class MainWindow extends JFrame {
 								if(index1 == 8){
 									result = Integer.parseInt(mar0) ^ Integer.parseInt(r[index2]);
 									mar0 = Integer.toString(result);
-									System.out.println(mar0);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 								if(index2 == 8){
 									result = Integer.parseInt(mar1) ^ Integer.parseInt(r[index2]);
 									mar1 = Integer.toString(result);
-									System.out.println(mar1);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 								}
 							}//END OF IF MAR-REGISTER
 							else if(index2!=-1){						//mar-mar
@@ -1011,24 +1013,24 @@ public class MainWindow extends JFrame {
 									if(index1==8){						//mar0-mar0
 										result = Integer.parseInt(mar0) ^ Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar0
 										result = Integer.parseInt(mar1) ^ Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}									
 								}
 								if(index2==9){							//MAR-mar1
 									if(index1==8){						//mar0-mar1
 										result = Integer.parseInt(mar1) ^ Integer.parseInt(mar0);
 										mar0 = Integer.toString(result);
-										System.out.println(mar0);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}
 									else if(index1==9){					//mar1-mar1
 										result = Integer.parseInt(mar1) ^ Integer.parseInt(mar0);
 										mar1 = Integer.toString(result);
-										System.out.println("MAR"+mar1);
+										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 									}								
 									
 								}
@@ -1037,12 +1039,12 @@ public class MainWindow extends JFrame {
 								if(index1==8){						//mar0-immediate
 									result = Integer.parseInt(mar0) ^ Integer.parseInt(words[2]);
 									mar0 = Integer.toString(result);
-									System.out.println(mar0);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+line+"\n");
 								}
 								else if(index1==9){					//mar1-immediate
 									result = Integer.parseInt(mar1) ^ Integer.parseInt(words[2]);
 									mar1 = Integer.toString(result);
-									System.out.println(mar1);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+line+"\n");
 								}
 							}//END OF IF MAR-IMMEDIATE
 							else{
@@ -1062,7 +1064,8 @@ public class MainWindow extends JFrame {
 							if(zeroFlag == "0000"){
 								if(index1==8){ PC = mar0; System.out.println("MAR0 = "+mar0);}
 								else if(index1==9){ PC = mar1; System.out.println("MAR1 = "+mar1);}
-							}						
+							}
+							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[14]+" "+binary_code[index1]+" "+line+"\n");
 						}
 						else{
 							System.out.println("ERROR at line: "+line_cnt);				//ERROR
@@ -1078,7 +1081,8 @@ public class MainWindow extends JFrame {
 							if((zeroFlag == "0000")&&(signFlag=="0000")){
 								if(index1==8){ PC = mar0; System.out.println("MAR0 = "+mar0);}
 								else if(index1==9){ PC = mar1; System.out.println("MAR1 = "+mar1);}
-							}						
+							}
+							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[15]+" "+binary_code[index1]+" "+line+"\n");
 						}
 						else{
 							System.out.println("ERROR at line: "+line_cnt);				//ERROR
@@ -1095,6 +1099,7 @@ public class MainWindow extends JFrame {
 								if(index1==8){ PC = mar0; System.out.println("MAR0 = "+mar0);}
 								else if(index1==9){ PC = mar1; System.out.println("MAR1 = "+mar1);}
 							}
+							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[16]+" "+binary_code[index1]+" "+line+"\n");
 						}
 						else{
 							System.out.println("ERROR at line: "+line_cnt);				//ERROR
@@ -1108,7 +1113,8 @@ public class MainWindow extends JFrame {
 						index1 = FindRegister(words[1]);		//see if operand1 is a MAR
 						if((index1==8)||(index1==9)){//MAR
 							if(index1==8){ PC = mar0; System.out.println("MAR0 = "+mar0);}
-							else if(index1==9){ PC = mar1; System.out.println("MAR1 = "+mar1);}						
+							else if(index1==9){ PC = mar1; System.out.println("MAR1 = "+mar1);}			
+							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[17]+" "+binary_code[index1]+" "+line+"\n");			
 						}
 						else{
 							System.out.println("ERROR at line: "+line_cnt);				//ERROR
