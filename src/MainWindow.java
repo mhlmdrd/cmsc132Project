@@ -1,18 +1,21 @@
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JInternalFrame;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements ActionListener{
 	static Window1 Window1 = new Window1();
 	static Window2 Window2 = new Window2();
 	static Window3 Window3 = new Window3();
@@ -30,7 +33,7 @@ public class MainWindow extends JFrame {
 	static String zeroFlag = new String();				//Zero Flag
 	static String signFlag = new String();				//Sign Flag
 	static String mar0="0",mar1="0";			 		//MAR[0]-MAR[1]
-	static int line_cnt =1;
+	static int line_cnt =1, clock_cycle =0;
 	public static void main(String[] args){
 		flagCMP = "0000 0000"; // updated if CMP instruction is called
 		signFlag = zeroFlag = "0000";
@@ -1128,8 +1131,7 @@ public class MainWindow extends JFrame {
 					e1.printStackTrace();
 			 }//end of 2nd try catch
 		}
-		
-		
+		//Window2.next_cycle.addActionListener(Window1);
 		/*
 		//4th window
 		JInternalFrame canvas4 = new JInternalFrame("WINDOW4", true,true,true,true);
@@ -1196,5 +1198,15 @@ public class MainWindow extends JFrame {
 		}		
 		
 	}//end of FindRegister
+	//---------------------ACTION PERFORMED------------------------------//
+
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == Window2.next_cycle){
+			clock_cycle++;
+			System.out.println(clock_cycle);
+			Window2.label.setText(" " + clock_cycle);
+		}//end of if next clock cycle
+		
+	}
 
 }
