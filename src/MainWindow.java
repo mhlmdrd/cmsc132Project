@@ -1,5 +1,4 @@
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -7,13 +6,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.LinkedList;
 
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JInternalFrame;
 import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JInternalFrame;
 
 public class MainWindow extends JFrame implements ActionListener{
 	static Window1 Window1 = new Window1();
@@ -40,9 +38,7 @@ public class MainWindow extends JFrame implements ActionListener{
 		int flag = 1;
 		JFileChooser choosy = new JFileChooser();
 		int returnValue = choosy.showOpenDialog(choosy);
-		if (returnValue == JFileChooser.APPROVE_OPTION) {
-		userFile = choosy.getSelectedFile();
-        }
+		if (returnValue == JFileChooser.APPROVE_OPTION)	userFile = choosy.getSelectedFile();
 		if(flag ==1){ //a file has been chosen
 			//---------------------INITIALIZE INSTRUCTION CODES------------------------//
 			instruction_code[0] = "0000 0000";			//LD
@@ -103,12 +99,12 @@ public class MainWindow extends JFrame implements ActionListener{
 			desktop.add(canvas1);
 			desktop.add(canvas2);
 			desktop.add(canvas3);
-			
+						
 			frame.add(desktop);
 			frame.setPreferredSize(new Dimension(1500, 1500));
 			frame.setVisible(true);
-			
-			
+			frame.pack();
+						
 			BufferedReader br = null;
 			try {
 				br = new BufferedReader(new FileReader(userFile));
@@ -118,8 +114,7 @@ public class MainWindow extends JFrame implements ActionListener{
 			 String line = null;
 			 try {
 				//get the size for array  
-				while ((line = br.readLine()) != null) {
-					//System.out.println("hi");
+				while ((line = br.readLine()) != null) {;
 					String input_row = line; //save each line in an array
 					String[] words = input_row.split(" ");
 					int index1 =0;
@@ -130,100 +125,74 @@ public class MainWindow extends JFrame implements ActionListener{
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
 						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
 						if((index1!=-1)&&((index2==8)||(index2==9))){//register-mar
-							if(index2==8){
-								r[index1] = mar0;
-								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[0]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-							}
-							if(index2==9){
-								r[index1] = mar1;
-								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[0]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								
-							}
-						}
-						else{
-							System.out.println("ERROR at line: "+line_cnt);				//ERROR
-							break;
-						}
+							if(index2==8) r[index1] = mar0;
+							if(index2==9) r[index1] = mar1;
+							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[0]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+						} else { System.out.println("ERROR at line: "+line_cnt); break;} //ERROR
+						Window3.newPipeline(line_cnt-1, "data transfer");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//END OF LOAD
 					
 					//-------------------------STORE------------------------------------//
-					if(words[0].equals("STR")){
+					else if(words[0].equals("STR")){
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
 						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
 						if((index2!=-1)&&((index1==8)||(index1==9))){//mar-register
-							if(index1==8){
-								mar0 = r[index2];
-								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[1]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-							}
-							if(index1==9){
-								mar1 = r[index2];
-								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[1]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-							}
-						}
-						else{
-							System.out.println("ERROR at line: "+line_cnt);				//ERROR
-							break;
-						}
+							if(index1==8) mar0 = r[index2];
+							if(index1==9) mar1 = r[index2];
+							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[1]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+						} else{ System.out.println("ERROR at line: "+line_cnt); break; } //ERROR
+						Window3.newPipeline(line_cnt-1, "data transfer");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//END OF STORE
 					
 					//-----------------------INC-------------------------//					
-					if(words[0].equals("INC")){
+					else if(words[0].equals("INC")){
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
 						if((index1!=-1)){//register
 							result = Integer.parseInt(r[index1])+1;
 							r[index1] = Integer.toString(result);
 							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[2]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-						}
-						else{
-							System.out.println("ERROR at line: "+line_cnt);				//ERROR
-							break;
-						}
+						} else{ System.out.println("ERROR at line: "+line_cnt); break; } //ERROR
+						Window3.newPipeline(line_cnt-1, "data transfer");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//END OF INC
 					
 					//-----------------------DEC-------------------------//
 					
-					if(words[0].equals("DEC")){
+					else if(words[0].equals("DEC")){
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
 						if((index1!=-1)){//register
 							result = Integer.parseInt(r[index1])-1;
 							r[index1] = Integer.toString(result);
 							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[3]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-						}
-						else{
-							System.out.println("ERROR at line: "+line_cnt);				//ERROR
-							break;
-						}
+						} else{ System.out.println("ERROR at line: "+line_cnt); break; } //ERROR
+						Window3.newPipeline(line_cnt-1, "data transfer");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//END OF DEC
-					
-					
-					
+										
 					//-------------------------SAVE------------------------------------//
 					//first word
-					if(words[0].equals("SV")){
+					else if(words[0].equals("SV")){
 						
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
 						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
 						
 						if((index1!=-1)&&(index2==-1)&&(index1!=8)&&(index2!=8)&&(index1!=9)&&(index2!=9)){		//register - immediate
 							r[index1] = words[2];
-							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[4]+" "+binary_code[index1]+"  "+line+"\n");
-							
-						}
-						else if((index1!=-1)&&(index2!=-1)&&(index1!=8)&&(index2!=8)&&(index1!=9)&&(index2!=9)){	//register-register
+							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[4]+" "+binary_code[index1]+"  "+line+"\n");														
+						} else if((index1!=-1)&&(index2!=-1)&&(index1!=8)&&(index2!=8)&&(index1!=9)&&(index2!=9)){	//register-register
 							r[index1] = r[index2];
 							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[4]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							
-						}
-						else{
-							System.out.println("ERROR at line: "+line_cnt);				//ERROR
-							break;
-						}
-					}//end of if SAVE
-					
+						} else{ System.out.println("ERROR at line: "+line_cnt); break; } //ERROR
+						Window3.newPipeline(line_cnt-1, "data transfer");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
+					}//end of if SAVE				
 					
 					//-------------------------ADD------------------------------------//
 					//first word
-					if(words[0].equals("ADD")){
+					else if(words[0].equals("ADD")){
 						
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
 						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
@@ -238,124 +207,92 @@ public class MainWindow extends JFrame implements ActionListener{
 							else if(index2!=-1){						//register-mar
 								if(index2==8){
 									result = Integer.parseInt(r[index1])+ Integer.parseInt(mar0);
-									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									
-								}
-								if(index2==9){
+									r[index1] = Integer.toString(result);								
+								}else if(index2==9){
 									result = Integer.parseInt(r[index1])+ Integer.parseInt(mar1);
 									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									
 								}
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR
 							
-							//-----------------------------------BEA HERE ------------------------------//
 							else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1])+ Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
 								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+line+"\n");
 								
 							}//END OF IF IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; } //ERROR
+							
 						}//DESTINATION = REGISTER
 						
 						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//mar-register
 								if(index1 == 8){
 									result = Integer.parseInt(mar0)+ Integer.parseInt(r[index2]);
-									mar0 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-								if(index2 == 8){
+									mar0 = Integer.toString(result);									
+								}else if(index1 == 9){
 									result = Integer.parseInt(mar1)+ Integer.parseInt(r[index2]);
-									mar1 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
+									mar1 = Integer.toString(result);									
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR-REGISTER
-							else if(index2!=-1){						//mar-mar
-								if(index2==8){							//MAR-mar0
-									if(index1==8){						//mar0-mar0
-										result = Integer.parseInt(mar0)+ Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar0
-										result = Integer.parseInt(mar1)+ Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}									
-								}
-								if(index2==9){							//MAR-mar1
-									if(index1==8){						//mar0-mar1
-										result = Integer.parseInt(mar1)+ Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar1
-										result = Integer.parseInt(mar1)+ Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-								}
+							else if(index2==8){						//mar-mar														
+								if(index1==8){						//mar0-mar0
+									result = Integer.parseInt(mar0)+ Integer.parseInt(mar0);
+									mar0 = Integer.toString(result);										
+								}else if(index1==9){					//mar1-mar0
+									result = Integer.parseInt(mar1)+ Integer.parseInt(mar0);
+									mar1 = Integer.toString(result);										
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+							}else if(index2==9){							//MAR-mar1
+								if(index1==8){						//mar0-mar1
+									result = Integer.parseInt(mar1)+ Integer.parseInt(mar0);
+									mar0 = Integer.toString(result);
+								}else if(index1==9){					//mar1-mar1
+									result = Integer.parseInt(mar1)+ Integer.parseInt(mar0);
+									mar1 = Integer.toString(result);									
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR-MAR
 							else if(index2==-1){						//mar - immediate
 								if(index1==8){						//mar0-immediate
 									result = Integer.parseInt(mar0)+ Integer.parseInt(words[2]);
-									mar0 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+line+"\n");
-								}
-								else if(index1==9){					//mar1-immediate
+									mar0 = Integer.toString(result);									
+								}else if(index1==9){					//mar1-immediate
 									result = Integer.parseInt(mar1)+ Integer.parseInt(words[2]);
 									mar1 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+line+"\n");
-								}
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[5]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR-IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; } //ERROR
 						}//DESTINATION = MAR
+						Window3.newPipeline(line_cnt-1, "arithmetic");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//end of if ADD
 					
 					//-------------------------SUBTRACT------------------------------------//
 					//first word
-					if(words[0].equals("SUB")){
-						
+					else if(words[0].equals("SUB")){						
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
-						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
-						
+						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate						
 						if((index1!=-1)&&(index1!=8) &&(index1!=9)){//register - immediate/REG/MAR
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
 								result = Integer.parseInt(r[index1])- Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
 								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								
 							}//END OF IF REGISTER
-							else if(index2!=-1){						//register-mar
-								if(index2==8){
-									result = Integer.parseInt(r[index1])- Integer.parseInt(mar0);
-									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-								if(index2==9){
-									result = Integer.parseInt(r[index1])- Integer.parseInt(mar1);
-									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									
-								}
+							else if(index2==8){						//register-mar
+								result = Integer.parseInt(r[index1])- Integer.parseInt(mar0);
+								r[index1] = Integer.toString(result);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+							}else if(index2==9){
+								result = Integer.parseInt(r[index1])- Integer.parseInt(mar1);
+								r[index1] = Integer.toString(result);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1])- Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
 								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+line+"\n");
 							}//END OF IF IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; } //ERROR
 						}//DESTINATION = REGISTER
 						
 						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
@@ -363,100 +300,68 @@ public class MainWindow extends JFrame implements ActionListener{
 								if(index1 == 8){
 									result = Integer.parseInt(mar0)- Integer.parseInt(r[index2]);
 									mar0 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-								if(index2 == 8){
+								}else if(index1 == 9){
 									result = Integer.parseInt(mar1)- Integer.parseInt(r[index2]);
 									mar1 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR-REGISTER
-							else if(index2!=-1){						//mar-mar
-								if(index2==8){							//MAR-mar0
-									if(index1==8){						//mar0-mar0
-										result = Integer.parseInt(mar0)- Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar0
-										result = Integer.parseInt(mar1)+ Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									
-								}
-								if(index2==9){							//MAR-mar1
-									if(index1==8){						//mar0-mar1
-										result = Integer.parseInt(mar1)- Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar1
-										result = Integer.parseInt(mar1)- Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									
-									
-								}
+							else if(index2==8){							//MAR-mar0
+								if(index1==8){						//mar0-mar0
+									result = Integer.parseInt(mar0)- Integer.parseInt(mar0);
+									mar0 = Integer.toString(result);
+								}else if(index1==9){					//mar1-mar0
+									result = Integer.parseInt(mar1)+ Integer.parseInt(mar0);
+									mar1 = Integer.toString(result);
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+							}else if(index2==9){							//MAR-mar1
+								if(index1==8){						//mar0-mar1
+									result = Integer.parseInt(mar1)- Integer.parseInt(mar0);
+									mar0 = Integer.toString(result);
+								}else if(index1==9){					//mar1-mar1
+									result = Integer.parseInt(mar1)- Integer.parseInt(mar0);
+									mar1 = Integer.toString(result);
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR-MAR
-							else if(index2==-1){						//mar - immediate
+							else if(index2==-1){					//mar - immediate
 								if(index1==8){						//mar0-immediate
 									result = Integer.parseInt(mar0)- Integer.parseInt(words[2]);
-									mar0 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+line+"\n");
-								}
-								else if(index1==9){					//mar1-immediate
+									mar0 = Integer.toString(result);									
+								}else if(index1==9){					//mar1-immediate
 									result = Integer.parseInt(mar1)- Integer.parseInt(words[2]);
-									mar1 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+line+"\n");
-								}
+									mar1 = Integer.toString(result);									
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[6]+" "+binary_code[index1]+" "+line+"\n");
 							}//END OF IF MAR-IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; } //ERROR
 						}//DESTINATION = MAR
+						Window3.newPipeline(line_cnt-1, "arithmetic");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//end of if SUBTRACT
 
 					//-------------------------MULTIPLY------------------------------------//
 					//first word
-					if(words[0].equals("MUL")){
-						
+					else if(words[0].equals("MUL")){						
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
-						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
-						
+						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate						
 						if((index1!=-1)&&(index1!=8) &&(index1!=9)){//register - immediate/REG/MAR
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//register-register
 								result = Integer.parseInt(r[index1])* Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
 								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								
 							}//END OF IF REGISTER
-							else if(index2!=-1){						//register-mar
-								if(index2==8){
-									result = Integer.parseInt(r[index1])* Integer.parseInt(mar0);
-									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									
-								}
-								if(index2==9){
-									result = Integer.parseInt(r[index1])* Integer.parseInt(mar1);
-									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									
-								}
-							}//END OF IF MAR
-							else if(index2==-1){						//register - immediate
+							else if(index2==8){ 		//register-mar
+								result = Integer.parseInt(r[index1])* Integer.parseInt(mar0);
+								r[index1] = Integer.toString(result);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");								
+							}else if(index2==9){
+								result = Integer.parseInt(r[index1])* Integer.parseInt(mar1);
+								r[index1] = Integer.toString(result);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");									
+							}else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1])* Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
-								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+line+"\n");
-								
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+line+"\n");								
 							}//END OF IF IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; } //ERROR
 						}//DESTINATION = REGISTER
 						
 						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
@@ -464,62 +369,46 @@ public class MainWindow extends JFrame implements ActionListener{
 								if(index1 == 8){
 									result = Integer.parseInt(mar0)* Integer.parseInt(r[index2]);
 									mar0 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-								if(index2 == 8){
+								}else if(index1 == 9){
 									result = Integer.parseInt(mar1)* Integer.parseInt(r[index2]);
 									mar1 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR-REGISTER
-							else if(index2!=-1){						//mar-mar
-								if(index2==8){							//MAR-mar0
-									if(index1==8){						//mar0-mar0
-										result = Integer.parseInt(mar0)* Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar0
-										result = Integer.parseInt(mar1)* Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}									
-								}
-								if(index2==9){							//MAR-mar1
-									if(index1==8){						//mar0-mar1
-										result = Integer.parseInt(mar1)* Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar1
-										result = Integer.parseInt(mar1)* Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-								}
+							else if(index2==8){							//MAR-mar0
+								if(index1==8){						//mar0-mar0
+									result = Integer.parseInt(mar0)* Integer.parseInt(mar0);
+									mar0 = Integer.toString(result);
+								}else if(index1==9){					//mar1-mar0
+									result = Integer.parseInt(mar1)* Integer.parseInt(mar0);
+									mar1 = Integer.toString(result);
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+							}else if(index2==9){					//MAR-mar1
+								if(index1==8){						//mar0-mar1
+									result = Integer.parseInt(mar1)* Integer.parseInt(mar0);
+									mar0 = Integer.toString(result);
+								}else if(index1==9){					//mar1-mar1
+									result = Integer.parseInt(mar1)* Integer.parseInt(mar0);
+									mar1 = Integer.toString(result);								
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR-MAR
-							else if(index2==-1){						//mar - immediate
+							else if(index2==-1){					//mar - immediate
 								if(index1==8){						//mar0-immediate
 									result = Integer.parseInt(mar0)* Integer.parseInt(words[2]);
 									mar0 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+line+"\n");
-								}
-								else if(index1==9){					//mar1-immediate
+								} else if(index1==9){					//mar1-immediate
 									result = Integer.parseInt(mar1)* Integer.parseInt(words[2]);
 									mar1 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+line+"\n");
-								}
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[7]+" "+binary_code[index1]+" "+line+"\n");
 							}//END OF IF MAR-IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; } //ERROR
 						}//DESTINATION = MAR
+						Window3.newPipeline(line_cnt-1, "arithmetic");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//end of if MULTIPLY
 
 					//-------------------------DIVIDE------------------------------------//
 					//first word
-					if(words[0].equals("DIV")){
+					else if(words[0].equals("DIV")){
 						
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
 						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
@@ -530,49 +419,29 @@ public class MainWindow extends JFrame implements ActionListener{
 									result = Integer.parseInt(r[index1])/ Integer.parseInt(r[index2]);
 									r[index1] = Integer.toString(result);
 									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-								else{
-									System.out.println("Division by zero is undefined.");
-								}
+								} else System.out.println("Division by zero is undefined.");
 							}//END OF IF REGISTER
-							else if(index2!=-1){						//register-mar
-								if(index2==8){
-									if (Integer.parseInt(mar0) != 0) {
-										result = Integer.parseInt(r[index1]) / Integer.parseInt(mar0);
-										r[index1] = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else{
-										System.out.println("Division by zero is undefined.");
-									}
-								}
-								if(index2==9){
-									if (Integer.parseInt(mar1) != 0) {
-										result = Integer.parseInt(r[index1]) / Integer.parseInt(mar1);
-										r[index1] = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else{
-										System.out.println("Division by zero is undefined.");
-									}		
-									
-								}
+							else if(index2==8){ //register-mar
+								if (Integer.parseInt(mar0) != 0) {
+									result = Integer.parseInt(r[index1]) / Integer.parseInt(mar0);
+									r[index1] = Integer.toString(result);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+								}else System.out.println("Division by zero is undefined."); 								
+							}else if(index2==9){
+								if (Integer.parseInt(mar1) != 0) {
+									result = Integer.parseInt(r[index1]) / Integer.parseInt(mar1);
+									r[index1] = Integer.toString(result);
+									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+								}else System.out.println("Division by zero is undefined.");
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								if (Integer.parseInt(words[2]) != 0) {
 									result = Integer.parseInt(r[index1]) / Integer.parseInt(words[2]);
 									r[index1] = Integer.toString(result);
 									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+line+"\n");
-								}
-								else{
-									System.out.println("Division by zero is undefined.");
-								}								
-								
+								}else System.out.println("Division by zero is undefined."); 
 							}//END OF IF IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; }//ERROR							
 						}//DESTINATION = REGISTER
 						
 						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
@@ -580,77 +449,54 @@ public class MainWindow extends JFrame implements ActionListener{
 								if (Integer.parseInt(r[index2]) != 0) {
 									if(index1 == 8){
 										result = Integer.parseInt(mar0) / Integer.parseInt(r[index2]);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									if(index2 == 8){
+										mar0 = Integer.toString(result);										
+									}else if(index1 == 9){
 										result = Integer.parseInt(mar1) / Integer.parseInt(r[index2]);
 										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}									
-								}
-								else{
-									System.out.println("Division by zero is undefined.");
-								}
+									} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");	
+								}else System.out.println("Division by zero is undefined."); 
 							}//END OF IF MAR-REGISTER
-							else if(index2!=-1){						//mar-mar
-								if(Integer.parseInt(mar0) != 0){
-									if(index2==8){							//MAR-mar0
-										if(index1==8){						//mar0-mar0
-											result = Integer.parseInt(mar0)/ Integer.parseInt(mar0);
-											mar0 = Integer.toString(result);
-											Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-										}
-										else if(index1==9){					//mar1-mar0
-											result = Integer.parseInt(mar1)/ Integer.parseInt(mar0);
-											mar1 = Integer.toString(result);
-											Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-										}										
-									}
-									if(index2==9){							//MAR-mar1
-										if(index1==8){						//mar0-mar1
-											result = Integer.parseInt(mar1)/ Integer.parseInt(mar0);
-											mar0 = Integer.toString(result);
-											Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-										}
-										else if(index1==9){					//mar1-mar1
-											result = Integer.parseInt(mar1)/ Integer.parseInt(mar0);
-											mar1 = Integer.toString(result);
-											Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-										}					
-									}
+							else if(index2==8){						//mar-mar
+								if(Integer.parseInt(mar0) != 0){					//MAR-mar0
+									if(index1==8){						//mar0-mar0
+										result = Integer.parseInt(mar0)/ Integer.parseInt(mar0);
+										mar0 = Integer.toString(result);
+									}else if(index1==9){					//mar1-mar0
+										result = Integer.parseInt(mar1)/ Integer.parseInt(mar0);
+										mar1 = Integer.toString(result);
+									} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");						
 								}
-								else{
-									System.out.println("Division by zero is undefined.");
-								}
+							}else if(index2==9){				//MAR-mar1
+								if(Integer.parseInt(mar1)!= 0){
+									if(index1==8){						//mar0-mar1
+										result = Integer.parseInt(mar0)/ Integer.parseInt(mar1);
+										mar0 = Integer.toString(result);
+									}else if(index1==9){					//mar1-mar1
+										result = Integer.parseInt(mar1)/ Integer.parseInt(mar1);
+										mar1 = Integer.toString(result);
+									} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+								}else System.out.println("Division by zero is undefined.");
 							}//END OF IF MAR-MAR
 							else if(index2==-1){						//mar - immediate
 								if (Integer.parseInt(words[2]) != 0) {
 									if(index1==8){						//mar0-immediate
 										result = Integer.parseInt(mar0)/ Integer.parseInt(words[2]);
 										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-immediate
+									}else if(index1==9){					//mar1-immediate
 										result = Integer.parseInt(mar1)/ Integer.parseInt(words[2]);
 										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+line+"\n");
-									}									
-								}
-								else{
-									System.out.println("Division by zero is undefined.");
-								}
+									} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[8]+" "+binary_code[index1]+" "+line+"\n");
+								} else System.out.println("Division by zero is undefined.");
 							}//END OF IF MAR-IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; } //ERROR								
 						}//DESTINATION = MAR
+						Window3.newPipeline(line_cnt-1, "arithmetic");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//end of if DIVIDE
 
 					//-----------------------CMP-------------------------//
 					
-					if(words[0].equals("CMP")){
+					else if(words[0].equals("CMP")){
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
 						index2 = FindRegister(words[2]);		//see if operand1 is a register/immediate 
 						if((index1!=-1) && (index2!=-1)){//register
@@ -659,16 +505,14 @@ public class MainWindow extends JFrame implements ActionListener{
 							else flagCMP = "0000 0010";
 							System.out.println("flagCMP = "+ flagCMP);							
 							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[9]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-						}
-						else{
-							System.out.println("ERROR at line: "+line_cnt);				//ERROR
-							break;
-						}
+						}else{ System.out.println("ERROR at line: "+line_cnt); break; } //ERROR
+						Window3.newPipeline(line_cnt-1, "comparison");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//END OF CMP
 					
 					//-------------------------BITWISE AND------------------------------------//
 					//first word
-					if(words[0].equals("AND")){
+					else if(words[0].equals("AND")){
 						
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
 						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
@@ -678,19 +522,15 @@ public class MainWindow extends JFrame implements ActionListener{
 								result = Integer.parseInt(r[index1]) & Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
 								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								
 							}//END OF IF REGISTER
-							else if(index2!=-1){						//register-mar
-								if(index2==8){
-									result = Integer.parseInt(r[index1]) & Integer.parseInt(mar0);
-									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-								if(index2==9){
-									result = Integer.parseInt(r[index1]) & Integer.parseInt(mar1);
-									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
+							else if(index2==8){		//register-mar
+								result = Integer.parseInt(r[index1]) & Integer.parseInt(mar0);
+								r[index1] = Integer.toString(result);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+							} else if(index2==9){
+								result = Integer.parseInt(r[index1]) & Integer.parseInt(mar1);
+								r[index1] = Integer.toString(result);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1]) & Integer.parseInt(words[2]);
@@ -698,10 +538,7 @@ public class MainWindow extends JFrame implements ActionListener{
 								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+line+"\n");
 								
 							}//END OF IF IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; } //ERROR
 						}//DESTINATION = REGISTER
 						
 						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
@@ -709,64 +546,48 @@ public class MainWindow extends JFrame implements ActionListener{
 								if(index1 == 8){
 									result = Integer.parseInt(mar0) & Integer.parseInt(r[index2]);
 									mar0 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-								if(index2 == 8){
+								}else if(index1 == 9){
 									result = Integer.parseInt(mar1) & Integer.parseInt(r[index2]);
 									mar1 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR-REGISTER
-							else if(index2!=-1){						//mar-mar
-								if(index2==8){							//MAR-mar0
-									if(index1==8){						//mar0-mar0
-										result = Integer.parseInt(mar0) & Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar0
-										result = Integer.parseInt(mar1) & Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}									
-								}
-								if(index2==9){							//MAR-mar1
-									if(index1==8){						//mar0-mar1
-										result = Integer.parseInt(mar1)& Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar1
-										result = Integer.parseInt(mar1) & Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}																	
-								}
+							else if(index2==8){							//MAR-mar0
+								if(index1==8){						//mar0-mar0
+									result = Integer.parseInt(mar0) & Integer.parseInt(mar0);
+									mar0 = Integer.toString(result);									
+								} else if(index1==9){					//mar1-mar0
+									result = Integer.parseInt(mar1) & Integer.parseInt(mar0);
+									mar1 = Integer.toString(result);
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");					
+							}else if(index2==9){							//MAR-mar1
+								if(index1==8){						//mar0-mar1
+									result = Integer.parseInt(mar1)& Integer.parseInt(mar0);
+									mar0 = Integer.toString(result);
+								}else if(index1==9){					//mar1-mar1
+									result = Integer.parseInt(mar1) & Integer.parseInt(mar0);
+									mar1 = Integer.toString(result);									
+								}Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR-MAR
 							else if(index2==-1){						//mar - immediate
 								if(index1==8){						//mar0-immediate
 									result = Integer.parseInt(mar0) & Integer.parseInt(words[2]);
 									mar0 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+line+"\n");
 									System.out.println(mar0);
-								}
-								else if(index1==9){					//mar1-immediate
+								}else if(index1==9){					//mar1-immediate
 									result = Integer.parseInt(mar1) & Integer.parseInt(words[2]);
-									mar1 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+line+"\n");
+									mar1 = Integer.toString(result);									
 									System.out.println(mar1);
-								}
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[10]+" "+binary_code[index1]+" "+line+"\n");
 							}//END OF IF MAR-IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; }		//ERROR								
 						}//DESTINATION = MAR
+						Window3.newPipeline(line_cnt-1, "logic");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//end of if BITWISE AND
 
 					//-------------------------BITWISE OR------------------------------------//
 					//first word
-					if(words[0].equals("OR")){
+					else if(words[0].equals("OR")){
 						
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
 						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
@@ -776,96 +597,70 @@ public class MainWindow extends JFrame implements ActionListener{
 								result = Integer.parseInt(r[index1]) | Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
 								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								
 							}//END OF IF REGISTER
-							else if(index2!=-1){						//register-mar
-								if(index2==8){
-									result = Integer.parseInt(r[index1]) | Integer.parseInt(mar0);
-									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-								if(index2==9){
-									result = Integer.parseInt(r[index1]) | Integer.parseInt(mar1);
-									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
+							else if(index2==8){				//register-mar
+								result = Integer.parseInt(r[index1]) | Integer.parseInt(mar0);
+								r[index1] = Integer.toString(result);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+							}else if(index2==9){
+								result = Integer.parseInt(r[index1]) | Integer.parseInt(mar1);
+								r[index1] = Integer.toString(result);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1]) | Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
-								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+line+"\n");
-								
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+line+"\n");								
 							}//END OF IF IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; }		//ERROR	
 						}//DESTINATION = REGISTER
 						
 						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//mar-register
 								if(index1 == 8){
 									result = Integer.parseInt(mar0) | Integer.parseInt(r[index2]);
-									mar0 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-								if(index2 == 8){
+									mar0 = Integer.toString(result);									
+								}else if(index1 == 9){
 									result = Integer.parseInt(mar1) | Integer.parseInt(r[index2]);
 									mar1 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
+								}Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR-REGISTER
-							else if(index2!=-1){						//mar-mar
-								if(index2==8){							//MAR-mar0
-									if(index1==8){						//mar0-mar0
-										result = Integer.parseInt(mar0) | Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar0
-										result = Integer.parseInt(mar1) | Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									
-								}
-								if(index2==9){							//MAR-mar1
-									if(index1==8){						//mar0-mar1
-										result = Integer.parseInt(mar1)| Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar1
-										result = Integer.parseInt(mar1) | Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}								
-									
-								}
+							else if(index2==8){						//MAR-mar0
+								if(index1==8){						//mar0-mar0
+									result = Integer.parseInt(mar0) | Integer.parseInt(mar0);
+									mar0 = Integer.toString(result);									
+								}else if(index1==9){					//mar1-mar0
+									result = Integer.parseInt(mar1) | Integer.parseInt(mar0);
+									mar1 = Integer.toString(result);
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+							}else if(index2==9){							//MAR-mar1
+								if(index1==8){						//mar0-mar1
+									result = Integer.parseInt(mar1)| Integer.parseInt(mar0);
+									mar0 = Integer.toString(result);
+								}else if(index1==9){					//mar1-mar1
+									result = Integer.parseInt(mar1) | Integer.parseInt(mar0);
+									mar1 = Integer.toString(result);
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR-MAR
 							else if(index2==-1){						//mar - immediate
 								if(index1==8){						//mar0-immediate
 									result = Integer.parseInt(mar0) | Integer.parseInt(words[2]);
 									mar0 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+line+"\n");
-								}
-								else if(index1==9){					//mar1-immediate
+								}else if(index1==9){					//mar1-immediate
 									result = Integer.parseInt(mar1) | Integer.parseInt(words[2]);
 									mar1 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+line+"\n");
-								}
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[11]+" "+binary_code[index1]+" "+line+"\n");
 							}//END OF IF MAR-IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; }		//ERROR	
 						}//DESTINATION = MAR
+						Window3.newPipeline(line_cnt-1, "logic");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//end of if BITWISE OR
 					
 					
 					//-----------------------------BITWISE NOT------------------------------------//
 					//first word
-					if(words[0].equals("NOT")){
+					else if(words[0].equals("NOT")){
 						index1 = FindRegister(words[1]);
 						index2 = FindRegister(words[2]);
 						
@@ -874,19 +669,15 @@ public class MainWindow extends JFrame implements ActionListener{
 								result = ~Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
 								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								
 							}//END OF IF REGISTER
-							else if(index2!=-1){						//register-mar
-								if(index2==8){
-									result = ~Integer.parseInt(mar0);
-									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-								if(index2==9){
-									result = ~Integer.parseInt(mar1);
-									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
+							else if(index2==8){	
+								result = ~Integer.parseInt(mar0);
+								r[index1] = Integer.toString(result);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+							} else if(index1==9){
+								result = ~Integer.parseInt(mar1);
+								r[index1] = Integer.toString(result);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								result = ~Integer.parseInt(words[2]);
@@ -894,75 +685,56 @@ public class MainWindow extends JFrame implements ActionListener{
 								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+line+"\n");
 								
 							}//END OF IF IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; }		//ERROR	
 						}//DESTINATION = REGISTER
 						
 						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//mar-register
 								if(index1 == 8){
 									result = ~Integer.parseInt(r[index2]);
-									mar0 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-								if(index2 == 8){
+									mar0 = Integer.toString(result);									
+								}else if(index1 == 9){
 									result = ~Integer.parseInt(r[index2]);
 									mar1 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR-REGISTER
-							else if(index2!=-1){						//mar-mar
-								if(index2==8){							//MAR-mar0
-									if(index1==8){						//mar0-mar0
-										result = ~Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar0
-										result = ~Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}									
-								}
-								if(index2==9){							//MAR-mar1
-									if(index1==8){						//mar0-mar1
-										result = ~Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar1
-										result = ~Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}																	
-								}
+							else if(index2==8){						//mar-mar //MAR-mar0
+								if(index1==8){						//mar0-mar0
+									result = ~Integer.parseInt(mar0);
+									mar0 = Integer.toString(result);									
+								}else if(index1==9){					//mar1-mar0
+									result = ~Integer.parseInt(mar0);
+									mar1 = Integer.toString(result);
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");		
+							}else if(index2==9){							//MAR-mar1
+								if(index1==8){						//mar0-mar1
+									result = ~Integer.parseInt(mar0);
+									mar0 = Integer.toString(result);									
+								}else if(index1==9){					//mar1-mar1
+									result = ~Integer.parseInt(mar0);
+									mar1 = Integer.toString(result);									
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR-MAR
 							else if(index2==-1){						//mar - immediate
 								if(index1==8){						//mar0-immediate
 									result = ~Integer.parseInt(words[2]);
 									mar0 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+line+"\n");
-								}
-								else if(index1==9){					//mar1-immediate
+								}else if(index1==9){					//mar1-immediate
 									result = ~Integer.parseInt(words[2]);
 									mar1 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+line+"\n");
-								}
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[12]+" "+binary_code[index1]+" "+line+"\n");
 							}//END OF IF MAR-IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; }		//ERROR	
 						}//DESTINATION = MAR
 						
 						if(index1==-1){ System.out.println("ERROR at line: "+line_cnt); break;}	//ERROR
-						
+						Window3.newPipeline(line_cnt-1, "logic");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//end of NOT
 					
 					//------------------------------BITWISE XOR---------------------------------------//
 					//first word
-					if(words[0].equals("XOR")){
+					else if(words[0].equals("XOR")){
 						
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
 						index2 = FindRegister(words[2]);		//see if operand2 is a register/immediate
@@ -972,165 +744,133 @@ public class MainWindow extends JFrame implements ActionListener{
 								result = Integer.parseInt(r[index1]) ^ Integer.parseInt(r[index2]);
 								r[index1] = Integer.toString(result);
 								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								
 							}//END OF IF REGISTER
-							else if(index2!=-1){						//register-mar
-								if(index2==8){
-									result = Integer.parseInt(r[index1]) ^ Integer.parseInt(mar0);
-									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-								if(index2==9){
-									result = Integer.parseInt(r[index1]) ^ Integer.parseInt(mar1);
-									r[index1] = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
+							else if(index2==8){						//register-mar
+								result = Integer.parseInt(r[index1]) ^ Integer.parseInt(mar0);
+								r[index1] = Integer.toString(result);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+							}else if(index2==9){
+								result = Integer.parseInt(r[index1]) ^ Integer.parseInt(mar1);
+								r[index1] = Integer.toString(result);
+								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
 							}//END OF IF MAR
 							else if(index2==-1){						//register - immediate
 								result = Integer.parseInt(r[index1]) ^ Integer.parseInt(words[2]);
 								r[index1] = Integer.toString(result);
 								Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+line+"\n");
-								
 							}//END OF IF IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; }		//ERROR	
 						}//DESTINATION = REGISTER
 						
 						if((index1==8) ||(index1==9)){//MAR - immediate/REG/MAR
 							if((index2!=-1)&&(index2!=8)&&(index2!=9)){//mar-register
 								if(index1 == 8){
 									result = Integer.parseInt(mar0) ^ Integer.parseInt(r[index2]);
+									mar0 = Integer.toString(result);									
+								}else if(index1 == 9){
+									result = Integer.parseInt(mar1) ^ Integer.parseInt(r[index2]);
+									mar1 = Integer.toString(result);									
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
+							}//END OF IF MAR-REGISTER
+							else if(index2==8){						//mar-mar
+								if(index1==8){						//mar0-mar0
+									result = Integer.parseInt(mar0) ^ Integer.parseInt(mar0);
 									mar0 = Integer.toString(result);
 									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-								if(index2 == 8){
-									result = Integer.parseInt(mar1) ^ Integer.parseInt(r[index2]);
+								}else if(index1==9){					//mar1-mar0
+									result = Integer.parseInt(mar1) ^ Integer.parseInt(mar0);
 									mar1 = Integer.toString(result);
 									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-								}
-							}//END OF IF MAR-REGISTER
-							else if(index2!=-1){						//mar-mar
-								if(index2==8){							//MAR-mar0
-									if(index1==8){						//mar0-mar0
-										result = Integer.parseInt(mar0) ^ Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar0
-										result = Integer.parseInt(mar1) ^ Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}									
-								}
-								if(index2==9){							//MAR-mar1
-									if(index1==8){						//mar0-mar1
-										result = Integer.parseInt(mar1) ^ Integer.parseInt(mar0);
-										mar0 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}
-									else if(index1==9){					//mar1-mar1
-										result = Integer.parseInt(mar1) ^ Integer.parseInt(mar0);
-										mar1 = Integer.toString(result);
-										Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");
-									}								
-									
-								}
+								}									
+							}else if(index2==9){							//MAR-mar1
+								if(index1==8){						//mar0-mar1
+									result = Integer.parseInt(mar1) ^ Integer.parseInt(mar0);
+									mar0 = Integer.toString(result);
+								}else if(index1==9){					//mar1-mar1
+									result = Integer.parseInt(mar1) ^ Integer.parseInt(mar0);
+									mar1 = Integer.toString(result);
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+binary_code[index2]+" "+line+"\n");					
 							}//END OF IF MAR-MAR
 							else if(index2==-1){					//mar - immediate
 								if(index1==8){						//mar0-immediate
 									result = Integer.parseInt(mar0) ^ Integer.parseInt(words[2]);
 									mar0 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+line+"\n");
-								}
-								else if(index1==9){					//mar1-immediate
+								} else if(index1==9){					//mar1-immediate
 									result = Integer.parseInt(mar1) ^ Integer.parseInt(words[2]);
 									mar1 = Integer.toString(result);
-									Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+line+"\n");
-								}
+								} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[13]+" "+binary_code[index1]+" "+line+"\n");
 							}//END OF IF MAR-IMMEDIATE
-							else{
-								System.out.println("ERROR at line: "+line_cnt);				//ERROR
-								break;
-							}
+							else{ System.out.println("ERROR at line: "+line_cnt); break; }		//ERROR	
 						}//DESTINATION = MAR
 						
 						if(index1==-1) { System.out.println("ERROR at line: "+line_cnt); break;}		//ERROR
+						Window3.newPipeline(line_cnt-1, "logic");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//end of if BITWISE XOR
 					
 					//-----------------------------------JE------------------------------------------//
 					
-					if(words[0].equals("JE")){						
+					else if(words[0].equals("JE")){						
 						index1 = FindRegister(words[1]);		//see if operand1 is a MAR
 						if((index1==8)||(index1==9)){//MAR
 							if(zeroFlag == "0000"){
 								if(index1==8){ PC = mar0; System.out.println("MAR0 = "+mar0);}
 								else if(index1==9){ PC = mar1; System.out.println("MAR1 = "+mar1);}
-							}
-							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[14]+" "+binary_code[index1]+" "+line+"\n");
-						}
-						else{
-							System.out.println("ERROR at line: "+line_cnt);				//ERROR
-							break;
-						}
+							} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[14]+" "+binary_code[index1]+" "+line+"\n");
+						} else{ System.out.println("ERROR at line: "+line_cnt); break; }		//ERROR	
+						Window3.newPipeline(line_cnt-1, "program flow");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//END OF JE
 					
 					//-----------------------------------JG------------------------------------------//
 					
-					if(words[0].equals("JG")){						
+					else if(words[0].equals("JG")){						
 						index1 = FindRegister(words[1]);		//see if operand1 is a MAR
 						if((index1==8)||(index1==9)){//MAR
 							if((zeroFlag == "0000")&&(signFlag=="0000")){
 								if(index1==8){ PC = mar0; System.out.println("MAR0 = "+mar0);}
 								else if(index1==9){ PC = mar1; System.out.println("MAR1 = "+mar1);}
-							}
-							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[15]+" "+binary_code[index1]+" "+line+"\n");
-						}
-						else{
-							System.out.println("ERROR at line: "+line_cnt);				//ERROR
-							break;
-						}
+							} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[15]+" "+binary_code[index1]+" "+line+"\n");
+						} else{ System.out.println("ERROR at line: "+line_cnt); break; }		//ERROR	
+						Window3.newPipeline(line_cnt-1, "program flow");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//END OF JG
 					
 					//-----------------------------------JL------------------------------------------//
 					
-					if(words[0].equals("JL")){						
+					else if(words[0].equals("JL")){						
 						index1 = FindRegister(words[1]);		//see if operand1 is a MAR
 						if((index1==8)||(index1==9)){//MAR
 							if(signFlag=="0000"){
 								if(index1==8){ PC = mar0; System.out.println("MAR0 = "+mar0);}
 								else if(index1==9){ PC = mar1; System.out.println("MAR1 = "+mar1);}
-							}
-							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[16]+" "+binary_code[index1]+" "+line+"\n");
-						}
-						else{
-							System.out.println("ERROR at line: "+line_cnt);				//ERROR
-							break;
-						}
+							} Window1.text.setText(Window1.text.getText()+"    "+instruction_code[16]+" "+binary_code[index1]+" "+line+"\n");
+						} else{ System.out.println("ERROR at line: "+line_cnt); break; }		//ERROR	
+						Window3.newPipeline(line_cnt-1, "program flow");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//END OF JL
 					
 					//-----------------------------------JMP------------------------------------------//
 					
-					if(words[0].equals("JMP")){						
+					else if(words[0].equals("JMP")){						
 						index1 = FindRegister(words[1]);		//see if operand1 is a MAR
 						if((index1==8)||(index1==9)){//MAR
 							if(index1==8){ PC = mar0; System.out.println("MAR0 = "+mar0);}
 							else if(index1==9){ PC = mar1; System.out.println("MAR1 = "+mar1);}			
 							Window1.text.setText(Window1.text.getText()+"    "+instruction_code[17]+" "+binary_code[index1]+" "+line+"\n");			
-						}
-						else{
-							System.out.println("ERROR at line: "+line_cnt);				//ERROR
-							break;
-						}
+						} else{ System.out.println("ERROR at line: "+line_cnt); break; }		//ERROR	
+						Window3.newPipeline(line_cnt-1, "program flow");
+						Window3.text.setText(Window3.text.getText()+"    "+line+"\t\t"+ Window3.getPipeline(line_cnt-1)+"\n");
 					}//END OF JG
+					
+					else { System.out.println("ERROR at line: "+line_cnt); break; }		//ERROR	
 					
 					line_cnt++; 							//LINE COUNTER
 				}//end of while loop
 			 }catch (IOException e1) {
 					e1.printStackTrace();
 			 }//end of 2nd try catch
-		}
+		}//end of flag
 		//Window2.next_cycle.addActionListener(Window1);
 		/*
 		//4th window
@@ -1156,57 +896,35 @@ public class MainWindow extends JFrame implements ActionListener{
 	//	desktop.add(canvas5);
 	//	desktop.add(canvas6);
 		
-		
-		
-	
 	}//end of main function
 	
 	public static int FindRegister(String word){
-		if(word.equals("r0")){
-			return 0;
-		}
-		if(word.equals("r1")){
-			return 1;
-		}
-		if(word.equals("r2")){
-			return 2;
-		}
-		if(word.equals("r3")){
-			return 3;
-		}
-		if(word.equals("r4")){
-			return 4;
-		}
-		if(word.equals("r5")){
-			return 5;
-		}
-		if(word.equals("r6")){
-			return 6;
-		}
-		if(word.equals("r7")){
-			return 7;
-		}
-		if(word.equals("mar0")){
-			return 8;
-		}
-		if(word.equals("mar1")){
-			return 9;
-		}
-		
-		else{
-			return -1;
-		}		
-		
+		if(word.equals("r0")) return 0;
+		else if(word.equals("r1")) return 1;
+		else if(word.equals("r2")) return 2;
+		else if(word.equals("r3")) return 3;
+		else if(word.equals("r4")) return 4;
+		else if(word.equals("r5")) return 5;
+		else if(word.equals("r6")) return 6;
+		else if(word.equals("r7")) return 7;
+		else if(word.equals("mar0")) return 8;
+		else if(word.equals("mar1")) return 9;
+		else return -1;		
 	}//end of FindRegister
+	
 	//---------------------ACTION PERFORMED------------------------------//
-
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == Window2.next_cycle){
 			clock_cycle++;
 			System.out.println(clock_cycle);
 			Window2.label.setText(" " + clock_cycle);
-		}//end of if next clock cycle
-		
+		}//end of if next clock cycle		
+	}//end of actionPerformed
+	
+	public static void printSpaces(int index){
+		for(int i = 0; i < index; i++){
+			Window3.text.setText(Window3.text.getText()+"");
+		}
 	}
 
-}
+}//end of MAIN WINDOW

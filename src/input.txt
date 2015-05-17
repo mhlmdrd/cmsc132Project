@@ -1,3 +1,7 @@
+SV r4 12
+LD r2 mar1
 SV r1 42
-SV 1 15
+SV r3 15
 XOR r3 r1
+ADD r3 r1
+SUB r3 r1
