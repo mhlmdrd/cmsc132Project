@@ -22,6 +22,7 @@ public class MainWindow extends JFrame implements ActionListener{
 	static Window6 Window6 = new Window6();
 	static Window7 Window7 = new Window7();
 	static File userFile;
+	static String[] lines = new String[5];
 	static String [] r = new String[8]; 				//REGISTERS r[0]-r[7]
 	static String [] binary_code = new String[18]; 		//code for the instruction
 	static String [] instruction_code = new String[18]; //code for the register
@@ -31,7 +32,7 @@ public class MainWindow extends JFrame implements ActionListener{
 	static String zeroFlag = new String();				//Zero Flag
 	static String signFlag = new String();				//Sign Flag
 	static String mar0="0",mar1="0";			 		//MAR[0]-MAR[1]
-	static int line_cnt =1, clock_cycle =0;
+	static int line_cnt =1, clock_cycle =0, file_line =0, next_cnt=0;
 	public static void main(String[] args){
 		flagCMP = "0000 0000"; // updated if CMP instruction is called
 		signFlag = zeroFlag = "0000";
@@ -94,7 +95,7 @@ public class MainWindow extends JFrame implements ActionListener{
 			JInternalFrame canvas3 = new JInternalFrame("WINDOW3", true,true,true,true);
 			canvas3.add(Window3);
 			canvas3.setVisible(true);
-			canvas3.setBounds(35, 35, 400, 350);
+			canvas3.setBounds(70, 70, 600, 550);
 			
 			desktop.add(canvas1);
 			desktop.add(canvas2);
@@ -104,7 +105,7 @@ public class MainWindow extends JFrame implements ActionListener{
 			frame.setPreferredSize(new Dimension(1500, 1500));
 			frame.setVisible(true);
 			frame.pack();
-						
+			//----------------------------READ THE NUMBER OF LINES----------------------//	
 			BufferedReader br = null;
 			try {
 				br = new BufferedReader(new FileReader(userFile));
@@ -113,13 +114,34 @@ public class MainWindow extends JFrame implements ActionListener{
 			}//end of 1st try catch
 			 String line = null;
 			 try {
+				 	while ((line = br.readLine()) != null) {
+						file_line++;			//get the number of lines
+					}
+			 }catch (IOException e1) {
+					e1.printStackTrace();
+			 }//end of 2nd try catch
+			lines = new String[file_line];
+			file_line =0;
+			//---------------READ AND INTERPRET FILE-----------------//
+			
+			br = null;
+			try {
+				br = new BufferedReader(new FileReader(userFile));
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}//end of 1st try catch
+			 line = null;
+			 try {
 				//get the size for array  
-				while ((line = br.readLine()) != null) {;
+				while ((line = br.readLine()) != null) {
 					String input_row = line; //save each line in an array
 					String[] words = input_row.split(" ");
 					int index1 =0;
 					int index2 =0;
 					int result =0;
+					
+					lines[file_line] = line;
+					file_line++;
 					//-------------------------LOAD------------------------------------//
 					if(words[0].equals("LD")){
 						index1 = FindRegister(words[1]);		//see if operand1 is a register/immediate 
@@ -891,13 +913,16 @@ public class MainWindow extends JFrame implements ActionListener{
 		canvas6.setVisible(true);
 		canvas6.setBounds(35, 35, 400, 350);
 		*/	
-		
+		print();
 	//	desktop.add(canvas4);
 	//	desktop.add(canvas5);
 	//	desktop.add(canvas6);
-		
 	}//end of main function
-	
+	public static void print(){
+		for(int i=0; i<Window3.cycles.size(); i++){
+			System.out.println(Window3.getPipeline(i));
+		}
+	}
 	public static int FindRegister(String word){
 		if(word.equals("r0")) return 0;
 		else if(word.equals("r1")) return 1;
@@ -912,12 +937,22 @@ public class MainWindow extends JFrame implements ActionListener{
 		else return -1;		
 	}//end of FindRegister
 	
+	public String PipeLineReader(int index){
+		String result = Window3.getPipeline(index);
+		return result;
+	}
+	public int PipeLineSize(){
+		
+		return Window3.cycles.size();
+	}
+	
+	
 	//---------------------ACTION PERFORMED------------------------------//
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == Window2.next_cycle){
-			clock_cycle++;
-			System.out.println(clock_cycle);
-			Window2.label.setText(" " + clock_cycle);
+				System.out.println("HELLO");
+				System.out.println(Window3.getPipeline(next_cnt));
+				next_cnt++;
 		}//end of if next clock cycle		
 	}//end of actionPerformed
 	
